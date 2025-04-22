@@ -1,0 +1,48 @@
+<!-- employee-edit-dialog.component.html -->
+<div class="dialog-container">
+  <div class="dialog-header">
+    <h2>Edit Employee</h2>
+    <button mat-icon-button class="close-button" (click)="onCancel()" aria-label="Close dialog">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content>
+    <form [formGroup]="editForm" class="employee-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Full Name</mat-label>
+        <input matInput formControlName="fullName" required>
+        <mat-error *ngIf="editForm.get('fullName')?.hasError('required')">
+          Full name is required
+        </mat-error>
+        <mat-error *ngIf="editForm.get('fullName')?.hasError('maxlength')">
+          Maximum 100 characters allowed
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" required>
+        <mat-error *ngIf="editForm.get('email')?.hasError('required')">
+          Email is required
+        </mat-error>
+        <mat-error *ngIf="editForm.get('email')?.hasError('email')">
+          Please enter a valid email
+        </mat-error>
+        <mat-error *ngIf="editForm.get('email')?.hasError('maxlength')">
+          Maximum 100 characters allowed
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-stroked-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary"
+            (click)="onSave()"
+            [disabled]="editForm.invalid || loading">
+      <span *ngIf="!loading">Save</span>
+      <mat-spinner *ngIf="loading" diameter="20" strokeWidth="3"></mat-spinner>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -21,6 +21,7 @@ import { SetupPasswordComponent } from './setup-password/setup-password.componen
 import { AdminCreateUserComponent } from './admin-create-user/admin-create-user.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { InventoryHistoryComponent } from './inventory/inventory-history/inventory-history.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 const routes: Routes = [
@@ -45,6 +46,7 @@ const routes: Routes = [
       { path: 'admin-create-user', component: AdminCreateUserComponent },
       { path: 'employees', component: EmployeeListComponent },
       { path: 'inventory-history', component: InventoryHistoryComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: '', redirectTo: 'inventory', pathMatch: 'full' }
     ]
   },
@@ -67,6 +69,7 @@ const routes: Routes = [
       { path: 'account/setup-password', component: SetupPasswordComponent },
       { path: 'admin-create-user', component: AdminCreateUserComponent },
       { path: 'inventory-history', component: InventoryHistoryComponent },
+      { path: 'profile', component: ProfileComponent },
 
       { path: '', redirectTo: 'inventory', pathMatch: 'full' }
     ]

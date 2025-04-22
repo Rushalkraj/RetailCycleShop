@@ -4,22 +4,25 @@
    
       <ng-container *ngIf="authService.isAdmin()">
         <li>
-          <a routerLink="/admin/inventory-history" routerLinkActive="active">Dashboard</a>
+          <a routerLink="/admin/inventory-history" routerLinkActive="active"><i class="fas fa-home"></i> Dashboard</a>
         </li>
         <li>
-          <a routerLink="/admin/inventory" routerLinkActive="active">Inventory</a>
+          <a routerLink="/admin/inventory" routerLinkActive="active"><i class="fas fa-boxes"></i> Inventory</a>
         </li>
         <li>
-          <a routerLink="/admin/customers" routerLinkActive="active">Customers</a>
+          <a routerLink="/admin/customers" routerLinkActive="active"><i class="fas fa-users"></i> Customers</a>
         </li>
         <li>
-          <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+          <a routerLink="/admin/orders" routerLinkActive="active"><i class="fas fa-shopping-cart"></i> Orders</a>
         </li>
         <li>
-          <a routerLink="/admin/admin-create-user" routerLinkActive="active">Registration</a>
+          <a routerLink="/admin/admin-create-user" routerLinkActive="active"><i class="fas fa-user-plus"></i> Registration</a>
         </li>
         <li>
-          <a routerLink="/admin/employees" routerLinkActive="active">Employee</a>
+          <a routerLink="/admin/employees" routerLinkActive="active"><i class="fas fa-id-card"></i> Employee</a>
+        </li>
+        <li>
+          <a routerLink="/admin/profile" routerLinkActive="active"><i class="fas fa-user"></i> Profile</a>
         </li>
         
       </ng-container>
@@ -27,16 +30,19 @@
 
       <ng-container *ngIf="authService.isEmployee()">
         <li>
-          <a routerLink="/employee/inventory-history" routerLinkActive="active">Dashboard</a>
+          <a routerLink="/employee/inventory-history" routerLinkActive="active"><i class="fas fa-home"></i> Dashboard</a>
         </li>
         <li>
-          <a routerLink="/employee/inventory" routerLinkActive="active">Inventory</a>
+          <a routerLink="/employee/inventory" routerLinkActive="active"><i class="fas fa-boxes"></i> Inventory</a>
         </li>
         <li>
-          <a routerLink="/employee/orders" routerLinkActive="active">Orders</a>
+          <a routerLink="/employee/orders" routerLinkActive="active"><i class="fas fa-shopping-cart"></i> Orders</a>
         </li>
         <li>
-          <a routerLink="/employee/customers" routerLinkActive="active">Customers</a>
+          <a routerLink="/employee/customers" routerLinkActive="active"><i class="fas fa-users"></i> Customers</a>
+        </li>
+        <li>
+          <a routerLink="/employee/profile" routerLinkActive="active"><i class="fas fa-user"></i> Profile</a>
         </li>
       
        
@@ -45,8 +51,8 @@
 
       <ng-container *ngIf="authService.isCustomer()">
         <li>
-          <a routerLink="/customer/orders" routerLinkActive="active">My Orders</a>
-          <a routerLink="/customer/shop" routerLinkActive="active">Browse Cycles</a>
+          <a routerLink="/customer/orders" routerLinkActive="active"><i class="fas fa-shopping-bag"></i> My Orders</a>
+          <a routerLink="/customer/shop" routerLinkActive="active"><i class="fas fa-bicycle"></i> Browse Cycles</a>
         </li>
       </ng-container>
 

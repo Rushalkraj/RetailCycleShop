@@ -1,8 +1,11 @@
+// components/employee-list/employee-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { ConfirmationService } from 'primeng/api';
-import { Employee } from '../models/employee.model';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { EmployeeEditDialogComponent } from '../employee-edit-dialog/employee-edit-dialog.component';
+import { Employee } from '../models/employee.model';
 
 @Component({
   selector: 'app-employee-list',
@@ -11,19 +14,33 @@ import { ToastrService } from 'ngx-toastr';
   providers: [ConfirmationService]
 })
 export class EmployeeListComponent implements OnInit {
-  employees: Employee[] = [];
+  employees: any[] = [];
   loading = true;
+  searchTerm: string = '';
+  filteredEmployees: any[] = [];
 
   constructor(
     private employeeService: EmployeeService,
     private confirmationService: ConfirmationService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialog: MatDialog
   ) {}
 
-  ngOnInit(): void {
-    this.loadEmployees();
-  }
-
+  
+    ngOnInit(): void {
+      this.loadEmployees();
+    }
+  
+    searchEmployees(): void {
+      this.filteredEmployees = this.employees.filter(employee =>
+        employee.fullName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        employee.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+  
+    get displayedEmployees(): any[] {
+      return this.searchTerm ? this.filteredEmployees : this.employees;
+    }
   loadEmployees(): void {
     this.loading = true;
     this.employeeService.getEmployees().subscribe({
@@ -38,7 +55,26 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  confirmDelete(employee: Employee): void {
+  openEditDialog(employee: Employee): void {
+    const dialogRef = this.dialog.open(EmployeeEditDialogComponent, {
+      width: '500px',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'modern-dialog',
+      autoFocus: false,
+      disableClose: true,
+      backdropClass: 'dialog-backdrop',
+      data: { employee }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Handle successful edit
+      }
+    });
+  }
+
+  confirmDelete(employee: any): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ${employee.fullName}?`,
       header: 'Confirm Deletion',
@@ -46,6 +82,7 @@ export class EmployeeListComponent implements OnInit {
       accept: () => this.deleteEmployee(employee.id)
     });
   }
+  
 
   deleteEmployee(id: string): void {
     this.employeeService.deleteEmployee(id).subscribe({

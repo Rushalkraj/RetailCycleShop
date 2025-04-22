@@ -18,6 +18,9 @@ export class OrderListComponent implements OnInit {
     { value: 4, label: 'Cancelled' }
   ];
 
+  searchTerm: string = '';
+  filteredOrders: Order[] = [];
+
   constructor(
     private orderService: OrderService,
     private toastr: ToastrService,
@@ -41,6 +44,18 @@ export class OrderListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  searchOrders(): void {
+    if (this.searchTerm) {
+      this.filteredOrders = this.orders.filter(order =>
+        order.customer.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.customer.lastName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        order.orderNumber.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    } else {
+      this.filteredOrders = [...this.orders];
+    }
   }
 
   getStatusClass(status: number): string {

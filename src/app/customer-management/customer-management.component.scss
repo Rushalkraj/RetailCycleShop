@@ -3,7 +3,7 @@
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1.5rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 
   .search-bar {
     max-width: 500px;
@@ -30,12 +30,12 @@
     border-spacing: 0;
 
     thead {
-      background-color: #4a90e2;
+      background-color: #007bff;
       color: white;
 
       th {
         padding: 1rem 1.25rem;
-        font-weight: 500;
+        font-weight: 600;
         border: none;
       }
     }
@@ -72,12 +72,12 @@
     }
 
     .btn-primary {
-      background-color: #4a90e2;
-      border-color: #4a90e2;
+      background-color: #007bff;
+      border-color: #007bff;
 
       &:hover {
-        background-color: #3a7bc8;
-        border-color: #3a7bc8;
+        background-color: #0056b3;
+        border-color: #0056b3;
       }
     }
 
@@ -102,7 +102,7 @@
       width: 3rem;
       height: 3rem;
       border-width: 0.25rem;
-      color: #4a90e2;
+      color: #007bff;
     }
   }
 }

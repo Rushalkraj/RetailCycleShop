@@ -2,13 +2,11 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
-import { InventoryListComponent } from './inventory/inventory-list/inventory-list.component'; 
-import { AuthGuard } from './guards/auth.guard'; 
-import { RoleGuard } from './guards/role.guard'; 
+import { InventoryListComponent } from './inventory/inventory-list/inventory-list.component';
+import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 import { CycleAddComponent } from './cycles/cycle-add/cycle-add.component';
@@ -44,6 +42,13 @@ import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
 
 import { TagModule } from 'primeng/tag';
+import { ProfileComponent } from './profile/profile.component';
+import { EmployeeEditDialogComponent } from './employee-edit-dialog/employee-edit-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
@@ -51,8 +56,10 @@ import { TagModule } from 'primeng/tag';
 
 
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   declarations: [
     AppComponent,
     LoginComponent,
@@ -60,7 +67,17 @@ import { TagModule } from 'primeng/tag';
     OrderListComponent,
 
     CycleAddComponent,
-    DashboardComponent, RegisterComponent,  InventoryHistoryComponent, CheckoutComponent, CustomerManagementComponent, CustomerEditComponent, AdminCreateUserComponent, SetupPasswordComponent, EmployeeListComponent 
+    DashboardComponent,
+    RegisterComponent,
+    InventoryHistoryComponent,
+    CheckoutComponent,
+    CustomerManagementComponent,
+    CustomerEditComponent,
+    AdminCreateUserComponent,
+    SetupPasswordComponent,
+    EmployeeListComponent,
+    ProfileComponent,
+    EmployeeEditDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -71,21 +88,26 @@ import { TagModule } from 'primeng/tag';
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     TableModule,
-  ToastModule,
-  ConfirmDialogModule, DropdownModule,
-  ProgressSpinnerModule,
-  CardModule,
-  ButtonModule,
-  ChartModule,
-  TagModule
+    ToastModule,
+    ConfirmDialogModule, DropdownModule,
+    ProgressSpinnerModule,
+    CardModule,
+    ButtonModule,
+    ChartModule,
+    TagModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule
   ],
   providers: [
-  
-      { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-      ConfirmationService,
-      MessageService
-    ],
-    
+
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ConfirmationService,
+    MessageService
+  ],
+
 
   bootstrap: [AppComponent]
 })

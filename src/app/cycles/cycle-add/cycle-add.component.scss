@@ -3,15 +3,15 @@
     max-width: 800px;
     margin: 2rem auto;
     padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    font-family: 'Nunito Sans', sans-serif;
   
     h2 {
-      color: #2c3e50;
+      color: #333;
       margin-bottom: 2rem;
-      font-weight: 600;
+      font-weight: 700;
       padding-bottom: 1rem;
       border-bottom: 1px solid #eee;
     }
@@ -29,13 +29,13 @@
       input {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        border: 1px solid #ccc;
+        border-radius: 12px;
         transition: all 0.2s;
   
         &:focus {
-          border-color: #4a90e2;
-          box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.2);
+          border-color: #007bff;
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.2);
           outline: none;
         }
       }
@@ -46,17 +46,17 @@
     }
   
     button[type="submit"] {
-      background-color: #4a90e2;
+      background-color: #007bff;
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 500;
+      border-radius: 12px;
+      font-weight: 600;
       cursor: pointer;
       transition: background-color 0.2s;
   
       &:hover {
-        background-color: #3a7bc8;
+        background-color: #0056b3;
       }
   
       &:disabled {
