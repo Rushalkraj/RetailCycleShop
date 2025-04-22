@@ -1,0 +1,73 @@
+<!-- register.component.html -->
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <!-- Full Name -->
+  <div class="form-group">
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" formControlName="fullName" class="form-control">
+    <div *ngIf="registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched" class="text-danger">
+      Full name is required
+    </div>
+  </div>
+
+  <!-- Email -->
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" id="email" formControlName="email" class="form-control" 
+           [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+    <div *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched" class="text-danger">
+      Email is required
+    </div>
+    <div *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched" class="text-danger">
+      Please enter a valid email
+    </div>
+    <div *ngIf="registerForm.get('email')?.hasError('notInvited') && registerForm.get('email')?.touched" class="text-danger">
+      This email hasn't been invited by an admin
+    </div>
+    <div *ngIf="isCheckingEmail" class="text-info">
+      Checking email...
+    </div>
+  </div>
+
+  <!-- Password -->
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" formControlName="password" class="form-control">
+    <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
+      Password must be at least 6 characters
+    </div>
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control">
+    <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-danger">
+      Please confirm your password
+    </div>
+    <div *ngIf="registerForm.hasError('mismatch')" class="text-danger">
+      Passwords do not match
+    </div>
+  </div>
+
+  <!-- Role (hidden in setup mode) -->
+  <div class="form-group" *ngIf="!isSetupMode">
+    <label for="role">Role</label>
+    <select id="role" formControlName="role" class="form-control">
+      <option value="Employee">Employee</option>
+      <option value="Manager">Manager</option>
+    </select>
+  </div>
+
+  <!-- Error/Success Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || isCheckingEmail">
+    {{ isSetupMode ? 'Set Password' : 'Register' }}
+  </button>
+</form>

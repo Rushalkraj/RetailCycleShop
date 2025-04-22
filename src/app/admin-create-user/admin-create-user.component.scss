@@ -1,0 +1,73 @@
+.admin-create-user-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #2c3e50;
+    }
+  
+    .form-group {
+      margin-bottom: 1.2rem;
+  
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+  
+      input, select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+    }
+  
+    .setup-link {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 4px;
+      border: 1px dashed #ccc;
+  
+      a {
+        word-break: break-all;
+        color: #4a90e2;
+        text-decoration: none;
+      }
+  
+      .btn-copy {
+        margin-top: 0.5rem;
+        background: #4a90e2;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+  
+        &:hover {
+          background: #3a7bc8;
+        }
+      }
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+      padding: 0.75rem;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  
+      &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  }

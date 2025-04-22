@@ -1,0 +1,72 @@
+.confirmation-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+  }
+  
+  .confirmation-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .confirmation-header {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-bottom: 1px solid #dee2e6;
+    
+    h2 {
+      margin: 0;
+      color: #212529;
+    }
+    
+    .order-number {
+      margin: 0.5rem 0 0;
+      color: #6c757d;
+    }
+  }
+  
+  .confirmation-body {
+    padding: 1.5rem;
+    
+    h4 {
+      margin-bottom: 1rem;
+      color: #495057;
+    }
+  }
+  
+  .confirmation-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .order-items {
+    margin-top: 2rem;
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      
+      th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #dee2e6;
+      }
+      
+      th {
+        background-color: #f8f9fa;
+      }
+    }
+  }
+  
+  @media print {
+    .confirmation-footer {
+      display: none;
+    }
+    
+    .confirmation-container {
+      padding: 0;
+    }
+  }

@@ -1,0 +1,164 @@
+<!-- <div class="order-container">
+    <h2>Place New Order</h2>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  
+    <div *ngIf="cycle" class="order-details">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="cycle-info card mb-4">
+            <div class="card-header">
+              <h4>Cycle Details</h4>
+            </div>
+            <div class="card-body">
+              <p><strong>Brand:</strong> {{ cycle.brand }}</p>
+              <p><strong>Model:</strong> {{ cycle.model }}</p>
+              <p><strong>Type:</strong> {{ cycle.type }}</p>
+              <p><strong>Price:</strong> {{ cycle.price | currency }}</p>
+              <p><strong>Available Stock:</strong> {{ cycle.stockQuantity }}</p>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-md-6">
+          <form [formGroup]="orderForm" (ngSubmit)="placeOrder()">
+            <div class="card mb-4">
+              <div class="card-header">
+                <h4>Order Information</h4>
+              </div>
+              <div class="card-body">
+                <div class="form-group mb-3">
+                  <label for="customerId">Customer</label>
+                  <div class="input-group">
+                    <select 
+                      id="customerId" 
+                      class="form-control" 
+                      formControlName="customerId"
+                      (change)="onCustomerChange($event)"
+                      [disabled]="isAddingCustomer">
+                      <option value="">Select Customer</option>
+                      <option *ngFor="let customer of customers" [value]="customer.customerId">
+                        {{ customer.firstName }} {{ customer.lastName }} ({{ customer.email }})
+                      </option>
+                    </select>
+                    <button 
+                      class="btn btn-outline-secondary" 
+                      type="button"
+                      (click)="openAddCustomerModal()"
+                      [disabled]="isAddingCustomer">
+                      + New Customer
+                    </button>
+                  </div>
+                  <div *ngIf="orderForm.get('customerId')?.invalid && orderForm.get('customerId')?.touched" 
+                       class="text-danger">
+                    Customer is required
+                  </div>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <label for="shippingAddressId">Shipping Address</label>
+                <select 
+                id="shippingAddressId" 
+                class="form-control" 
+                formControlName="shippingAddressId"
+                [disabled]="!orderForm.get('customerId')?.value">
+                <option value="">Select Shipping Address</option>
+                <option *ngFor="let address of customerAddresses" [value]="address.addressId">
+                  {{ formatAddress(address) }} 
+                  <span *ngIf="address.isDefaultShipping">(Default)</span>
+                </option>
+              </select>
+                  <div *ngIf="orderForm.get('shippingAddressId')?.invalid && orderForm.get('shippingAddressId')?.touched" 
+                       class="text-danger">
+                    Shipping address is required
+                  </div>
+                  <button 
+                  type="button" 
+                  class="btn btn-sm btn-outline-primary mt-2"
+                  (click)="openAddAddress()">
+                  + Add New Address
+                </button>
+              </div>
+  
+                <div class="form-group mb-3">
+                  <label for="quantity">Quantity</label>
+                  <input 
+                    type="number" 
+                    id="quantity" 
+                    class="form-control" 
+                    formControlName="quantity"
+                    min="1" 
+                    [max]="cycle.stockQuantity">
+                  <div *ngIf="orderForm.get('quantity')?.invalid && orderForm.get('quantity')?.touched" 
+                       class="text-danger">
+                    Valid quantity is required (1-{{ cycle.stockQuantity }})
+                  </div>
+                </div>
+  
+                <div class="form-group mb-3">
+                  <label for="paymentMethod">Payment Method</label>
+                  <select 
+                    id="paymentMethod" 
+                    class="form-control" 
+                    formControlName="paymentMethod">
+                    <option value="CreditCard">Credit Card</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="BankTransfer">Bank Transfer</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+  
+            <div class="card mb-4">
+              <div class="card-header">
+                <h4>Order Summary</h4>
+              </div>
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-6">Subtotal:</div>
+                  <div class="col-6 text-end">{{ calculateOrder().subtotal | currency }}</div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-6">Tax (6.25%):</div>
+                  <div class="col-6 text-end">{{ calculateOrder().tax | currency }}</div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-6"><strong>Total:</strong></div>
+                  <div class="col-6 text-end"><strong>{{ calculateOrder().total | currency }}</strong></div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" (click)="cancel()">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="orderForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                {{ isLoading ? 'Processing...' : 'Place Order' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="!cycle" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <app-customer-modal 
+  #customerModal
+  (customerAdded)="onCustomerAdded($event)">
+</app-customer-modal>
+
+<app-address 
+  #addressModal
+  (addressAdded)="onAddressAdded($event)">
+</app-address>
+
+  </div>
+   -->

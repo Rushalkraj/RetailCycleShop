@@ -1,0 +1,63 @@
+<div class="dashboard-container">
+  <nav class="sidebar">
+    <ul>
+   
+      <ng-container *ngIf="authService.isAdmin()">
+        <li>
+          <a routerLink="/admin/inventory-history" routerLinkActive="active">Dashboard</a>
+        </li>
+        <li>
+          <a routerLink="/admin/inventory" routerLinkActive="active">Inventory</a>
+        </li>
+        <li>
+          <a routerLink="/admin/customers" routerLinkActive="active">Customers</a>
+        </li>
+        <li>
+          <a routerLink="/admin/orders" routerLinkActive="active">Orders</a>
+        </li>
+        <li>
+          <a routerLink="/admin/admin-create-user" routerLinkActive="active">Registration</a>
+        </li>
+        <li>
+          <a routerLink="/admin/employees" routerLinkActive="active">Employee</a>
+        </li>
+        
+      </ng-container>
+
+
+      <ng-container *ngIf="authService.isEmployee()">
+        <li>
+          <a routerLink="/employee/inventory-history" routerLinkActive="active">Dashboard</a>
+        </li>
+        <li>
+          <a routerLink="/employee/inventory" routerLinkActive="active">Inventory</a>
+        </li>
+        <li>
+          <a routerLink="/employee/orders" routerLinkActive="active">Orders</a>
+        </li>
+        <li>
+          <a routerLink="/employee/customers" routerLinkActive="active">Customers</a>
+        </li>
+      
+       
+      </ng-container>
+
+
+      <ng-container *ngIf="authService.isCustomer()">
+        <li>
+          <a routerLink="/customer/orders" routerLinkActive="active">My Orders</a>
+          <a routerLink="/customer/shop" routerLinkActive="active">Browse Cycles</a>
+        </li>
+      </ng-container>
+
+  
+      <li class="logout-item">
+        <button (click)="authService.logout()" class="logout-btn">Logout</button>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

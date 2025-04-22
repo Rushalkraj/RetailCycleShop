@@ -1,0 +1,42 @@
+<div class="admin-create-user-container">
+    <h2>Create New User</h2>
+    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" formControlName="fullName" required>
+      </div>
+  
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" required>
+      </div>
+  
+      <div class="form-group">
+        <label>Role</label>
+        <select formControlName="role" required>
+          <option value="Admin">Admin</option>
+          <option value="Employee">Employee</option>
+        </select>
+      </div>
+  
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+  
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+      </div>
+  
+      <div *ngIf="successMessage" class="success-message">
+        {{ successMessage }}
+        <!-- <button type="button" class="btn-copy" (click)="copyToClipboard()">
+          <i class="bi bi-clipboard"></i> Copy
+        </button> -->
+      </div>
+  
+      <button type="submit" [disabled]="createUserForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
+        {{ isLoading ? 'Creating...' : 'Create User' }}
+      </button>
+    </form>
+  </div>

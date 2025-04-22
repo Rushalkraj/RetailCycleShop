@@ -1,0 +1,113 @@
+// login.component.scss
+.login-container {
+  max-width: 450px;
+  margin: 5rem auto;
+  padding: 3rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: all 0.2s;
+
+      &:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.2);
+        outline: none;
+      }
+    }
+  }
+
+  .error-message {
+    color: #e74c3c;
+    background-color: rgba(231, 76, 60, 0.1);
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: #3a7bc8;
+    }
+
+    &:disabled {
+      background-color: #95a5a6;
+      cursor: not-allowed;
+    }
+  }
+
+  .text-center {
+    text-align: center;
+    margin-top: 1.5rem;
+
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #3a7bc8;
+        text-decoration: underline;
+      }
+    }
+
+    .btn-outline-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      border: 1px solid #4a90e2;
+      color: #4a90e2;
+      background: transparent;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+
+      &:hover {
+        background-color: rgba(74, 144, 226, 0.1);
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .login-container {
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+}

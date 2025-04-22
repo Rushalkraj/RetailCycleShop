@@ -1,0 +1,58 @@
+<div class="customer-management">
+  
+
+  
+    <div class="search-bar mb-4">
+      <input type="text" class="form-control" placeholder="Search customers..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
+    </div>
+  
+
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <table *ngIf="!isLoading" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th> Address</th>
+          <th>Actions</th>
+         
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let customer of customers">
+          <td>{{customer.firstName}} {{customer.lastName}}</td>
+          <td>{{customer.email}}</td>
+          <td>{{customer.phone}}</td>
+          <td>
+            <div *ngIf="customer.shippingAddress">
+              {{ customer.shippingAddress.streetLine1 }},
+              <span *ngIf="customer.shippingAddress.streetLine2">{{ customer.shippingAddress.streetLine2 }}, </span>
+              {{ customer.shippingAddress.city }},
+              {{ customer.shippingAddress.state }},
+              {{ customer.shippingAddress.postalCode }},
+              {{ customer.shippingAddress.country }}
+            </div>
+            <div *ngIf="!customer.shippingAddress">
+              <em>No Address</em>
+            </div>
+          </td>
+          
+          <td>
+            <div class="btn-group">
+            <button class="btn btn-sm btn-primary" (click)="navigateToEditCustomer(customer.customerId)">
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button *ngIf="userRole=='Admin'" class="btn btn-sm btn-danger" (click)="deleteCustomer(customer.customerId)">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+  </div>

@@ -1,0 +1,67 @@
+// cycle-form.component.scss
+.cycle-form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 2rem;
+      font-weight: 600;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+  
+    .form-group {
+      margin-bottom: 1.5rem;
+  
+      label {
+        display: block;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.5rem;
+      }
+  
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.2s;
+  
+        &:focus {
+          border-color: #4a90e2;
+          box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.2);
+          outline: none;
+        }
+      }
+  
+      input[type="file"] {
+        padding: 0.5rem;
+      }
+    }
+  
+    button[type="submit"] {
+      background-color: #4a90e2;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+  
+      &:hover {
+        background-color: #3a7bc8;
+      }
+  
+      &:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+    }
+  }

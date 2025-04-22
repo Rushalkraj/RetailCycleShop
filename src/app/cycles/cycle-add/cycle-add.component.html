@@ -1,0 +1,30 @@
+<div class="cycle-form-container">
+  <h2>Add New Cycle</h2>
+  <form [formGroup]="cycleForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+          <label>Brand</label>
+          <input type="text" formControlName="brand">
+      </div>
+      <div class="form-group">
+          <label>Type</label>
+          <input type="text" formControlName="type">
+      </div>
+      <div class="form-group">
+          <label>Model</label>
+          <input type="text" formControlName="model">
+      </div>
+      <div class="form-group">
+          <label>Price</label>
+          <input type="number" formControlName="price">
+      </div>
+      <div class="form-group">
+          <label>Stock Quantity</label>
+          <input type="number" formControlName="stockQuantity">
+      </div>
+      <div class="form-group">
+          <label>Upload Cycle Image</label>
+          <input type="file" (change)="onFileSelected($event)">
+      </div>
+      <button type="submit" [disabled]="!cycleForm.valid">Add Cycle</button>
+  </form>
+</div>

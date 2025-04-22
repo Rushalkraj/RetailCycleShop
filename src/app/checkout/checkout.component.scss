@@ -1,0 +1,133 @@
+.order-items-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-item-vertical {
+  display: flex;
+  gap: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  .customer-info-view, .address-info-view {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    
+    .form-control-plaintext {
+      padding: 0.5rem 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px dashed #dee2e6;
+      min-height: 38px; // Match input field height
+      
+      &:empty::after {
+        content: "Not provided";
+        color: #6c757d;
+        font-style: italic;
+      }
+    }
+  }
+  
+  // For the address section specifically
+  .address-info-view {
+    .form-control-plaintext {
+      &:first-child {
+        margin-top: 0.5rem;
+      }
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  .item-image {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+  }
+  
+  .item-details {
+    flex-grow: 1;
+    
+    h5 {
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      
+      .price {
+        font-weight: 500;
+        color: #2c3e50;
+        min-width: 80px;
+      }
+      
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        
+        input {
+          width: 60px;
+          text-align: center;
+        }
+      }
+      
+      .total-price {
+        font-weight: 600;
+        color: #2c3e50;
+        min-width: 100px;
+      }
+    }
+  }
+}
+
+.order-totals-vertical {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    
+    span:first-child {
+      color: #666;
+    }
+    
+    span:last-child {
+      font-weight: 500;
+    }
+    
+    &.grand-total {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+      
+      span:last-child {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #2c3e50;
+      }
+    }
+  }
+}

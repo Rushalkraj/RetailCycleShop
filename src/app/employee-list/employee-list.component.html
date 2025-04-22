@@ -1,0 +1,48 @@
+<div class="employee-container">
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+  
+    <div class="header">
+      <h2>
+        <i class="pi pi-users"></i> Employee Management
+      </h2>
+      <p>Manage your shop staff efficiently</p>
+    </div>
+  
+    <p-table
+      [value]="employees"
+      [loading]="loading"
+      styleClass="p-datatable-striped"
+      [paginator]="true"
+      [rows]="10"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Joined On</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-employee>
+        <tr>
+          <td>{{ employee.fullName }}</td>
+          <td>{{ employee.email }}</td>
+          <td>{{ employee.createdDate | date: 'mediumDate' }}</td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-rounded p-button-danger"
+              (click)="confirmDelete(employee)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4">No employees found</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>

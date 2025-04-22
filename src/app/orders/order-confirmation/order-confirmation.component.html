@@ -1,0 +1,63 @@
+<!-- <div class="confirmation-container">
+    <div *ngIf="isLoading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="!isLoading && order" class="confirmation-card">
+      <div class="confirmation-header">
+        <h2>Order Confirmation</h2>
+        <p class="order-number">Order #{{order.orderNumber}}</p>
+      </div>
+  
+      <div class="confirmation-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h4>Order Details</h4>
+            <p><strong>Date:</strong> {{order.orderDate | date:'medium'}}</p>
+            <p><strong>Status:</strong> {{getStatusText(order.status)}}</p>
+            <p><strong>Total:</strong> {{order.totalAmount | currency}}</p>
+          </div>
+          <div class="col-md-6">
+            <h4>Shipping Address</h4>
+            <p>{{order.shippingAddress?.streetLine1}}</p>
+            <p *ngIf="order.shippingAddress?.streetLine2">{{order.shippingAddress?.streetLine2}}</p>
+            <p>{{order.shippingAddress?.city}}, {{order.shippingAddress?.state}} {{order.shippingAddress?.postalCode}}</p>
+            <p>{{order.shippingAddress?.country}}</p>
+          </div>
+        </div>
+  
+        <div class="order-items mt-4">
+          <h4>Items Ordered</h4>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of order.orderItems">
+                <td>{{item.cycle?.brand}} {{item.cycle?.model}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.unitPrice | currency}}</td>
+                <td>{{item.totalPrice | currency}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  
+      <div class="confirmation-footer">
+        <button class="btn btn-primary" (click)="printOrder()">Print Receipt</button>
+        <button class="btn btn-outline-secondary" routerLink="/admin/inventory">Back to Inventory</button>
+      </div>
+    </div>
+  
+    <div *ngIf="!isLoading && !order && errorMessage" class="alert alert-danger">
+      {{errorMessage}}
+    </div>
+  </div> -->

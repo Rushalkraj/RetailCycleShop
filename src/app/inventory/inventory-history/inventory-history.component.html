@@ -1,0 +1,103 @@
+<div class="inventory-dashboard">
+  <p-toast></p-toast>
+
+  <div class="header">
+    <h1><i class="pi pi-box"></i> Inventory History Dashboard</h1>
+    <p>Track stock movements and inventory health</p>
+  </div>
+
+  <div class="controls">
+    <p-dropdown 
+      [(ngModel)]="selectedDays" 
+      [options]="[7, 14, 30]" 
+      (onChange)="loadSummary(selectedDays)"
+      placeholder="Select days">
+    </p-dropdown>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading && summary" class="dashboard-content">
+    <!-- Stock Alerts -->
+    <div class="alert-cards">
+      <p-card class="critical" header="Critical Stock">
+        <div class="card-content">
+          <h2>{{ summary.criticalStock }}</h2>
+          <p>Items with ≤ 2 in stock</p>
+          <p-button 
+            icon="pi pi-arrow-right" 
+            label="View" 
+            [routerLink]="['/admin/inventory']"
+            [queryParams]="{filter: 'critical'}">
+          </p-button>
+        </div>
+      </p-card>
+
+      <p-card class="warning" header="Low Stock">
+        <div class="card-content">
+          <h2>{{ summary.lowStock }}</h2>
+          <p>Items needing restock</p>
+          <p-button 
+            icon="pi pi-arrow-right" 
+            label="View" 
+            [routerLink]="['/admin/inventory']"
+            [queryParams]="{filter: 'low'}">
+          </p-button>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Activity Chart -->
+    <div class="chart-card">
+      <p-card header="Weekly Inventory Changes">
+        <p-chart 
+          type="bar" 
+          [data]="chartData" 
+          [options]="chartOptions"
+          height="300px">
+        </p-chart>
+      </p-card>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-card">
+      <p-card header="Recent Inventory Changes">
+        <p-table 
+          [value]="summary.recentActivity" 
+          [paginator]="true" 
+          [rows]="5"
+          styleClass="p-datatable-sm">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Cycle</th>
+              <th>Type</th>
+              <th>Change</th>
+              <th>Before</th>
+              <th>After</th>
+              <th>Date</th>
+              <th>Reason</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-activity>
+            <tr>
+              <td>{{ activity.cycle }}</td>
+              <td>
+                <p-tag 
+                  [value]="activity.type" 
+                  [severity]="activity.type === 'Restock' ? 'success' : 'danger'">
+                </p-tag>
+              </td>
+              <td>{{ activity.change }}</td>
+              <td>{{ activity.previousQuantity }}</td>
+              <td>{{ activity.newQuantity }}</td>
+              <td>{{ activity.createdAt | date:'shortDate' }}</td>
+              <td>{{ activity.changeReason || 'N/A' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+</div>
