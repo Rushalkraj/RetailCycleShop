@@ -52,4 +52,7 @@ export class OrderService {
       })
     );
   }
+  deleteOrder(orderId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${orderId}`);
+  }
 }

@@ -1,20 +1,41 @@
 <div class="order-management container-fluid py-4">
-  
   <div class="card">
     <div class="card-header bg-white border-bottom-0 py-3">
       <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-0">Order Management</h2>
-        <button class="btn btn-primary" (click)="fetchOrders()" [disabled]="loading">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-          Refresh Orders
-        </button>
+        <div>
+          <button class="btn btn-outline-secondary me-2" (click)="fetchOrders()" [disabled]="loading">
+            <i class="bi bi-arrow-clockwise me-1"></i>
+            <span *ngIf="!loading">Refresh</span>
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+          </button>
+         
+        </div>
       </div>
-    </div>
-    <div class="search-bar mb-4">
-      <input type="text" class="form-control" placeholder="Search orders..." [(ngModel)]="searchTerm" (input)="searchOrders()">
     </div>
 
     <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Search orders..." 
+                   [(ngModel)]="searchTerm" (input)="searchOrders()">
+          </div>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <div class="btn-group" role="group">
+            <button *ngFor="let filter of statusFilters" 
+                    type="button" 
+                    class="btn btn-outline-primary"
+                    [class.active]="activeFilter === filter.value"
+                    (click)="applyFilter(filter.value)">
+              {{ filter.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="table-responsive">
         <table class="table table-hover align-middle">
           <thead class="table-light">
@@ -25,7 +46,7 @@
               <th>Status</th>
               <th>Items</th>
               <th>Total</th>
-              <!-- <th>Actions</th> -->
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -36,8 +57,12 @@
                 </div>
               </td>
             </tr>
-            <tr *ngFor="let order of (searchTerm ? filteredOrders : orders)" class="order-row">
-              <td class="fw-semibold">{{ order.orderNumber }}</td>
+            <tr *ngFor="let order of filteredOrders" class="order-row">
+              <td class="fw-semibold">
+                <a [routerLink]="['/orders', order.orderId]" class="text-decoration-none">
+                  {{ order.orderNumber }}
+                </a>
+              </td>
               <td>
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-sm bg-light rounded-circle me-2">
@@ -49,7 +74,7 @@
                   </div>
                 </div>
               </td>
-              <td>{{ order.orderDate | date: 'MMM d, y h:mm a' }}</td>
+              <td>{{ order.orderDate | date: 'mediumDate' }}</td>
               <td>
                 <select class="form-select form-select-sm status-select" 
                         [(ngModel)]="order.status" 
@@ -65,21 +90,46 @@
               <td>{{ order.orderItems?.length || 0 }}</td>
               <td class="fw-bold">{{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</td>
               <td>
-              
+                <div class="d-flex gap-2">
+                  <button class="btn btn-sm btn-outline-primary" 
+                          [routerLink]="['/orders', order.orderId]"
+                          title="View Details">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" 
+                          (click)="confirmDelete(order)"
+                          title="Delete Order">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
               </td>
             </tr>
-            <tr *ngIf="!loading && orders.length === 0 && !searchTerm">
+            <tr *ngIf="!loading && filteredOrders.length === 0">
               <td colspan="7" class="text-center py-4 text-muted">
-                No orders found
-              </td>
-            </tr>
-            <tr *ngIf="!loading && searchTerm && filteredOrders.length === 0">
-              <td colspan="7" class="text-center py-4 text-muted">
-                No orders found for "{{searchTerm}}"
+                {{ searchTerm ? 'No orders found for "' + searchTerm + '"' : 'No orders found' }}
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="filteredOrders.length > 0">
+        <div class="text-muted">
+          Showing {{ filteredOrders.length }} of {{ orders.length }} orders
+        </div>
+        <nav>
+          <ul class="pagination mb-0">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link" (click)="prevPage()">Previous</a>
+            </li>
+            <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage">
+              <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link" (click)="nextPage()">Next</a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
