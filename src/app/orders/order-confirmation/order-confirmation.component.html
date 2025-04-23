@@ -1,63 +1,111 @@
-<!-- <div class="confirmation-container">
-    <div *ngIf="isLoading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
+<div class="confirmation-container printable">
+  <div class="confirmation-header">
+    <div class="header-content">
+      <h2><i class="bi bi-check-circle"></i> Order Confirmed</h2>
+      <p>Thank you for your purchase!</p>
     </div>
-  
-    <div *ngIf="!isLoading && order" class="confirmation-card">
-      <div class="confirmation-header">
-        <h2>Order Confirmation</h2>
-        <p class="order-number">Order #{{order.orderNumber}}</p>
-      </div>
-  
-      <div class="confirmation-body">
-        <div class="row">
-          <div class="col-md-6">
-            <h4>Order Details</h4>
-            <p><strong>Date:</strong> {{order.orderDate | date:'medium'}}</p>
-            <p><strong>Status:</strong> {{getStatusText(order.status)}}</p>
-            <p><strong>Total:</strong> {{order.totalAmount | currency}}</p>
-          </div>
-          <div class="col-md-6">
-            <h4>Shipping Address</h4>
-            <p>{{order.shippingAddress?.streetLine1}}</p>
-            <p *ngIf="order.shippingAddress?.streetLine2">{{order.shippingAddress?.streetLine2}}</p>
-            <p>{{order.shippingAddress?.city}}, {{order.shippingAddress?.state}} {{order.shippingAddress?.postalCode}}</p>
-            <p>{{order.shippingAddress?.country}}</p>
+    <div class="order-number">
+      Order #{{order?.orderNumber}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card customer-info">
+        <div class="card-header">
+          <h3>Customer Information</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="order?.customer">
+            <h5>{{order?.customer?.firstName}} {{order?.customer?.lastName}}</h5>
+            <p>{{order?.customer?.email}}</p>
+            <p>{{order?.customer?.phone}}</p>
           </div>
         </div>
-  
-        <div class="order-items mt-4">
-          <h4>Items Ordered</h4>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of order.orderItems">
-                <td>{{item.cycle?.brand}} {{item.cycle?.model}}</td>
-                <td>{{item.quantity}}</td>
-                <td>{{item.unitPrice | currency}}</td>
-                <td>{{item.totalPrice | currency}}</td>
-              </tr>
-            </tbody>
-          </table>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shipping-info">
+        <div class="card-header">
+          <h3>Shipping Information</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="order?.shippingAddress">
+            <h5>Shipping Address</h5>
+            <p>{{order?.shippingAddress?.streetLine1}}</p>
+            <p *ngIf="order?.shippingAddress?.streetLine2">{{order?.shippingAddress?.streetLine2}}</p>
+            <p>{{order?.shippingAddress?.city}}, {{order?.shippingAddress?.state}} {{order?.shippingAddress?.postalCode}}</p>
+            <p>{{order?.shippingAddress?.country}}</p>
+          </div>
         </div>
       </div>
-  
-      <div class="confirmation-footer">
-        <button class="btn btn-primary" (click)="printOrder()">Print Receipt</button>
-        <button class="btn btn-outline-secondary" routerLink="/admin/inventory">Back to Inventory</button>
+    </div>
+  </div>
+
+  <div class="card order-details mt-4">
+    <div class="card-header">
+      <h3>Order Details</h3>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order?.orderItems">
+            <td>{{item.cycle?.brand}} {{item.cycle?.model}}</td>
+            <td>{{item.quantity}}</td>
+            <td>{{item.unitPrice | currency:'INR'}}</td>
+            <td>{{item.totalPrice | currency:'INR'}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-end">Subtotal:</td>
+            <td>{{order?.subtotal | currency:'INR'}}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-end">Tax:</td>
+            <td>{{order?.tax | currency:'INR'}}</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="3" class="text-end">Total:</td>
+            <td>{{order?.totalAmount | currency:'INR'}}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <div class="payment-info mt-4" *ngIf="order?.payment">
+    <div class="card">
+      <div class="card-header">
+        <h3>Payment Information</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Payment Method:</strong> {{getPaymentMethodName(order?.payment!.paymentType)}}</p>
+        <p><strong>Amount Paid:</strong> {{order?.payment?.amount | currency:'INR'}}</p>
+        <p *ngIf="order?.payment?.transactionId"><strong>Transaction ID:</strong> {{order?.payment?.transactionId}}</p>
+        <!-- <p><strong>Status:</strong> {{getPaymentStatusName(order?.payment!.status)}}</p> -->
+        <a *ngIf="order?.payment?.receiptUrl" [href]="order?.payment?.receiptUrl" target="_blank" class="btn btn-sm btn-outline-primary">
+          <i class="bi bi-receipt"></i> View Receipt
+        </a>
       </div>
     </div>
-  
-    <div *ngIf="!isLoading && !order && errorMessage" class="alert alert-danger">
-      {{errorMessage}}
-    </div>
-  </div> -->
+  </div>
+
+  <div class="confirmation-actions mt-4">
+    <button class="btn btn-primary" (click)="printInvoice()">
+      <i class="bi bi-printer"></i> Print Invoice
+    </button>
+    <button class="btn btn-outline-secondary" (click)="continueShopping()">
+      <i class="bi bi-house"></i> Continue Shopping
+    </button>
+  </div>
+</div>

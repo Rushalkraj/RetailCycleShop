@@ -1,5 +1,6 @@
 <div class="cycle-form-container">
-  <h2>Add New Cycle</h2>
+    <h2 *ngIf="!isEditMode">Add New Cycle</h2>
+  <h2 *ngIf="isEditMode">Edit Cycle</h2>
   <form [formGroup]="cycleForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
           <label>Brand</label>
@@ -25,6 +26,7 @@
           <label>Upload Cycle Image</label>
           <input type="file" (change)="onFileSelected($event)">
       </div>
-      <button type="submit" [disabled]="!cycleForm.valid">Add Cycle</button>
+      <button type="submit" [disabled]="!cycleForm.valid" *ngIf="!isEditMode">Add Cycle</button>
+      <button type="submit" [disabled]="!cycleForm.valid" *ngIf="isEditMode">Update Cycle</button>
   </form>
 </div>

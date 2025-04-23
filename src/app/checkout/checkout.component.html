@@ -46,7 +46,7 @@
 
 
     <div class="col-md-5">
-      <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+      <form [formGroup]="checkoutForm" (ngSubmit)=" proceedToPayment()">
 
         <div class="card customer-section mb-3">
           <div class="card-header">
@@ -64,7 +64,7 @@
               </select>
             </div>
 
-            <div *ngIf="showCustomerForm" class="customer-form">
+            <!-- <div *ngIf="showCustomerForm" class="customer-form">
               <div *ngIf="!isNewCustomer; else newCustomerForm">
                 Read-only view for existing customer
                 <div class="customer-info-view">
@@ -118,9 +118,63 @@
               </ng-template>
             </div>
           </div>
-        </div>
+        </div> -->
+        <div *ngIf="showCustomerForm" class="customer-form">
+          <div *ngIf="!isNewCustomer">
+            <div class="customer-info-view">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">First Name</label>
+                  <div class="form-control-plaintext">{{selectedCustomer?.firstName}}</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Last Name</label>
+                  <div class="form-control-plaintext">{{selectedCustomer?.lastName}}</div>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Email</label>
+                  <div class="form-control-plaintext">{{selectedCustomer?.email}}</div>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone</label>
+                  <div class="form-control-plaintext">{{selectedCustomer?.phone}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-    
+          <div *ngIf="isNewCustomer">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-control" formControlName="firstName" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-control" formControlName="lastName" required>
+              </div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="email" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" formControlName="phone" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<!--     
         <div class="card shipping-section mb-3" *ngIf="showCustomerForm">
           <div class="card-header">
             <h3>Shipping Address</h3>
@@ -202,9 +256,92 @@
               <input class="form-check-input" type="checkbox" formControlName="saveBilling" id="saveBilling">
               <label class="form-check-label" for="saveBilling">Save as default billing address</label>
             </div>
+          </div> -->
+        <!-- </div> -->
+        <div class="card shipping-section mb-3" *ngIf="showCustomerForm">
+          <div class="card-header">
+            <h3>Shipping Address</h3>
+          </div>
+          <div class="card-body">
+            <div *ngIf="!isNewCustomer">
+              <div class="address-info-view">
+                <div class="row mb-3">
+                  <div class="col-12">
+                    <label class="form-label">Street Address</label>
+                    <div class="form-control-plaintext">{{selectedCustomer?.shippingAddress?.streetLine1}}</div>
+                    <div *ngIf="selectedCustomer?.shippingAddress?.streetLine2" class="form-control-plaintext">
+                      {{selectedCustomer?.shippingAddress?.streetLine2}}
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">City</label>
+                    <div class="form-control-plaintext">{{selectedCustomer?.shippingAddress?.city}}</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">State</label>
+                    <div class="form-control-plaintext">{{selectedCustomer?.shippingAddress?.state}}</div>
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Postal Code</label>
+                    <div class="form-control-plaintext">{{selectedCustomer?.shippingAddress?.postalCode}}</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    <div class="form-control-plaintext">{{selectedCustomer?.shippingAddress?.country}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="isNewCustomer">
+              <div class="row mb-3">
+                <div class="col-12">
+                  <label class="form-label">Street Address</label>
+                  <input type="text" class="form-control" formControlName="streetLine1" required>
+                  <input type="text" class="form-control mt-2" formControlName="streetLine2" placeholder="Apt, suite, etc.">
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">City</label>
+                  <input type="text" class="form-control" formControlName="city" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">State</label>
+                  <input type="text" class="form-control" formControlName="state" required>
+                </div>
+              </div>
+              
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label">Postal Code</label>
+                  <input type="text" class="form-control" formControlName="postalCode" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Country</label>
+                  <input type="text" class="form-control" formControlName="country" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" formControlName="saveShipping" id="saveShipping">
+              <label class="form-check-label" for="saveShipping">Save as default shipping address</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="saveBilling" id="saveBilling">
+              <label class="form-check-label" for="saveBilling">Save as default billing address</label>
+            </div>
           </div>
         </div>
-        <div class="card payment-section mb-3">
+        <!-- <div class="card payment-section mb-3">
           <div class="card-header">
             <h3>Payment Method</h3>
           </div>
@@ -215,7 +352,7 @@
               <option value="BankTransfer">Bank Transfer</option>
             </select>
           </div>
-        </div>
+        </div> -->
 
 
         <div class="card order-total mb-3">

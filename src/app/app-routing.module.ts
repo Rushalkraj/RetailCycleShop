@@ -22,6 +22,8 @@ import { AdminCreateUserComponent } from './admin-create-user/admin-create-user.
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { InventoryHistoryComponent } from './inventory/inventory-history/inventory-history.component';
 import { ProfileComponent } from './profile/profile.component';
+import { PaymentComponent } from './payment/payment.component';
+import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
 
 
 const routes: Routes = [
@@ -47,7 +49,10 @@ const routes: Routes = [
       { path: 'employees', component: EmployeeListComponent },
       { path: 'inventory-history', component: InventoryHistoryComponent },
       { path: 'profile', component: ProfileComponent },
-      { path: '', redirectTo: 'inventory', pathMatch: 'full' }
+      { path: 'payment', component: PaymentComponent,  data: { title: 'Payment' }},
+      {  path: 'order-confirmation',  component: OrderConfirmationComponent,  data: { title: 'Order Confirmation' }    },
+      { path: '', redirectTo: 'inventory', pathMatch: 'full' },
+      
     ]
   },
   {
@@ -70,6 +75,8 @@ const routes: Routes = [
       { path: 'admin-create-user', component: AdminCreateUserComponent },
       { path: 'inventory-history', component: InventoryHistoryComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'payment', component: PaymentComponent,  data: { title: 'Payment' }},
+      {  path: 'order-confirmation',  component: OrderConfirmationComponent,  data: { title: 'Order Confirmation' }    },
 
       { path: '', redirectTo: 'inventory', pathMatch: 'full' }
     ]

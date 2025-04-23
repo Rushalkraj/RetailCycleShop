@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { InventoryListComponent } from './inventory/inventory-list/inventory-lis
 import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { CurrencyPipe } from '@angular/common';
 
 import { CycleAddComponent } from './cycles/cycle-add/cycle-add.component';
 
@@ -54,12 +55,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 
-
-
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { PaymentComponent } from './payment/payment.component';
+import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
 
 @NgModule({
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
     AppComponent,
     LoginComponent,
@@ -77,7 +77,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     SetupPasswordComponent,
     EmployeeListComponent,
     ProfileComponent,
-    EmployeeEditDialogComponent
+    EmployeeEditDialogComponent,
+    PaymentComponent,
+    OrderConfirmationComponent
   ],
   imports: [
     BrowserModule,
@@ -102,7 +104,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
     MatProgressSpinnerModule
   ],
   providers: [
-
+    CurrencyPipe,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     ConfirmationService,
     MessageService

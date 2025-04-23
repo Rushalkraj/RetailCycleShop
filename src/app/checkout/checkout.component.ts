@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+// checkout.component.ts
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from '../services/customer.service';
 import { CartService } from '../services/cart.service';
@@ -21,6 +22,12 @@ export class CheckoutComponent implements OnInit {
   showCustomerForm = false;
   isNewCustomer = false;
   selectedCustomer: Customer | null = null;
+  
+  PaymentMethod = {
+    CreditCard: 'CREDIT_CARD',
+    PayPal: 'PAYPAL',
+    BankTransfer: 'BANK_TRANSFER'
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -28,8 +35,7 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
-    private toastr: ToastrService,
-
+    private toastr: ToastrService
   ) {
     this.checkoutForm = this.fb.group({
       customerId: ['', Validators.required],
@@ -42,8 +48,8 @@ export class CheckoutComponent implements OnInit {
       city: ['', Validators.required],
       state: ['', Validators.required],
       postalCode: ['', Validators.required],
-      country: ['', Validators.required],
-      paymentMethod: ['CreditCard', Validators.required],
+      country: ['India', Validators.required],
+      paymentMethod: ['CREDIT_CARD', Validators.required],
       saveShipping: [true],
       saveBilling: [false]
     });
@@ -55,7 +61,16 @@ export class CheckoutComponent implements OnInit {
   }
 
   loadCart(): void {
-    this.cartItems = this.cartService.getItems();
+    this.cartItems = this.cartService.getItems().map(item => ({
+      ...item,
+      brand: item.brand || 'Unknown Brand',
+      model: item.model || 'Unknown Model',
+      price: item.price || 0,
+      quantity: item.quantity || 1,
+      cycleId: item.cycleId ,
+      imageUrl: item.imageUrl || 'assets/default-cycle.jpg'
+    }));
+
     if (this.cartItems.length === 0) {
       this.toastr.warning('Your cart is empty', 'Cart Empty');
       this.router.navigate(['/admin/inventory']);
@@ -82,59 +97,52 @@ export class CheckoutComponent implements OnInit {
     if (value === 'new') {
       this.isNewCustomer = true;
       this.showCustomerForm = true;
+      this.selectedCustomer = null;
       this.resetCustomerFields();
+      this.enableCustomerForm(true);
     } else if (value) {
       this.isNewCustomer = false;
       const customerId = +value;
-      const customer = this.customers.find(c => c.customerId === customerId);
+      this.selectedCustomer = this.customers.find(c => c.customerId === customerId) || null;
 
-      if (customer) {
-        this.selectedCustomer = customer;
+      if (this.selectedCustomer) {
         this.showCustomerForm = true;
-        console.log('Shipping Address:', customer.shippingAddress);
-        this.populateCustomerForm(customer);
+        this.populateCustomerForm(this.selectedCustomer);
+        this.enableCustomerForm(false);
       }
     } else {
       this.showCustomerForm = false;
       this.selectedCustomer = null;
     }
   }
+
+  private enableCustomerForm(enable: boolean): void {
+    const controls = ['firstName', 'lastName', 'email', 'phone', 
+                     'streetLine1', 'streetLine2', 'city', 
+                     'state', 'postalCode', 'country'];
+    
+    controls.forEach(control => {
+      if (enable) {
+        this.checkoutForm.get(control)?.enable();
+      } else {
+        this.checkoutForm.get(control)?.disable();
+      }
+    });
+  }
+
   populateCustomerForm(customer: Customer): void {
-    // Basic customer info
     this.checkoutForm.patchValue({
       firstName: customer.firstName || '',
       lastName: customer.lastName || '',
       email: customer.email || '',
-      phone: customer.phone || ''
+      phone: customer.phone || '',
+      streetLine1: customer.shippingAddress?.streetLine1 || '',
+      streetLine2: customer.shippingAddress?.streetLine2 || '',
+      city: customer.shippingAddress?.city || '',
+      state: customer.shippingAddress?.state || '',
+      postalCode: customer.shippingAddress?.postalCode || '',
+      country: customer.shippingAddress?.country || 'India'
     });
-    // Shipping address if available
-    if (customer.shippingAddress) {
-      this.checkoutForm.patchValue({
-        streetLine1: customer.shippingAddress.streetLine1 || '',
-        streetLine2: customer.shippingAddress.streetLine2 || '',
-        city: customer.shippingAddress.city || '',
-        state: customer.shippingAddress.state || '',
-        postalCode: customer.shippingAddress.postalCode || '',
-        country: customer.shippingAddress.country || ''
-      });
-    }
-  }
-  cancelCustomerEdit(): void {
-    this.showCustomerForm = false;
-    if (this.selectedCustomer) {
-      this.checkoutForm.patchValue({
-        firstName: this.selectedCustomer.firstName,
-        lastName: this.selectedCustomer.lastName,
-        email: this.selectedCustomer.email,
-        phone: this.selectedCustomer.phone,
-        streetLine1: this.selectedCustomer.shippingAddress?.streetLine1 || '',
-        streetLine2: this.selectedCustomer.shippingAddress?.streetLine2 || '',
-        city: this.selectedCustomer.shippingAddress?.city || '',
-        state: this.selectedCustomer.shippingAddress?.state || '',
-        postalCode: this.selectedCustomer.shippingAddress?.postalCode || '',
-        country: this.selectedCustomer.shippingAddress?.country || ''
-      });
-    }
   }
 
   saveCustomer(): void {
@@ -168,9 +176,12 @@ export class CheckoutComponent implements OnInit {
         next: (customer) => {
           this.customers.push(customer);
           this.checkoutForm.patchValue({ customerId: customer.customerId });
+          this.selectedCustomer = customer;
           this.toastr.success('Customer created successfully', 'Success');
           this.isLoading = false;
           this.showCustomerForm = false;
+          this.proceedToPayment();
+
         },
         error: (err) => {
           this.toastr.error('Failed to create customer', 'Error');
@@ -216,7 +227,7 @@ export class CheckoutComponent implements OnInit {
       city: '',
       state: '',
       postalCode: '',
-      country: ''
+      country: 'India'
     });
   }
 
@@ -225,7 +236,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   getTax(): number {
-    return this.getSubtotal() * 0.0625; // 6.25% tax
+    return this.getSubtotal() * 0.0625;
   }
 
   getTotal(): number {
@@ -247,136 +258,45 @@ export class CheckoutComponent implements OnInit {
       this.router.navigate(['/admin/inventory']);
     }
   }
-  private createOrder(customerId: number, addressId: number): void {
-    const formValue = this.checkoutForm.value;
-    const orderData: OrderCreateDto = {
-      customerId: customerId,
-      shippingAddressId: addressId,
-      subtotal: this.getSubtotal(),
-      tax: this.getTax(),
-      totalAmount: this.getTotal(),
-      paymentMethod: formValue.paymentMethod,
-      items: this.cartItems.map(item => ({
-        cycleId: item.cycleId,
-        quantity: item.quantity,
-        unitPrice: item.price
-      }))
-    };
 
-    console.log('Order data being sent:', orderData);
-
-    this.orderService.createOrder(orderData).subscribe({
-      next: (order) => {
-        this.cartService.clearCart();
-        this.toastr.success('Order placed successfully', 'Success');
-        this.router.navigate(['/admin/order-confirmation'], {
-          queryParams: { orderId: order.orderId }
-        });
-      },
-      error: (err) => {
-        console.error('Order creation error:', err);
-        this.isLoading = false;
-        this.toastr.error('Failed to place order: ' + err?.error?.message, 'Error');
-        console.log('Full error object:', err);
-        console.log('Error response:', err.error);
-      }
-    });
+// In your checkout.component.ts
+proceedToPayment(): void {
+  if (this.checkoutForm.invalid) {
+    this.toastr.warning('Please fill all required fields', 'Form Incomplete');
+    return;
   }
 
-
-
-  placeOrder(): void {
-    console.log('Cart items:', this.cartItems);
-    if (this.checkoutForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Form Incomplete');
-      return;
-    }
-
-    const formValue = this.checkoutForm.value;
-
-
-    if (this.isNewCustomer) {
-      // Handle new customer creation first
-      const customerData = this.prepareCustomerData();
-      this.customerService.createCustomer(customerData).subscribe({
-        next: (customer) => {
-          if (customer.shippingAddress?.addressId) {
-            this.createOrder(customer.customerId, customer.shippingAddress.addressId);
-          } else {
-            this.isLoading = false;
-            this.toastr.error('Shipping address not created', 'Error');
-          }
-        },
-        error: (err) => {
-          this.isLoading = false;
-          this.toastr.error('Failed to create customer', 'Error');
-        }
-      });
-    } else if (this.selectedCustomer) {
-      // For existing customer, ensure we have shipping address ID
-      if (this.selectedCustomer.shippingAddress?.addressId) {
-        this.createOrder(this.selectedCustomer.customerId, this.selectedCustomer.shippingAddress.addressId);
-      } else {
-        // Update customer with new shipping address first
-        this.updateCustomerAndCreateOrder();
-      }
-    }
-  }
-
-  private prepareCustomerData(): CustomerCreateDto {
-    const formValue = this.checkoutForm.value;
-    return {
+  const formValue = this.checkoutForm.value;
+  const orderData = {
+    customerId: this.selectedCustomer?.customerId || 0,
+    paymentMethod: formValue.paymentMethod,
+    customer: {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
       email: formValue.email,
-      phone: formValue.phone,
-      shippingAddress: {
-        streetLine1: formValue.streetLine1,
-        streetLine2: formValue.streetLine2,
-        city: formValue.city,
-        state: formValue.state,
-        postalCode: formValue.postalCode,
-        country: formValue.country,
-        isDefaultShipping: formValue.saveShipping,
-        isDefaultBilling: formValue.saveBilling
-      }
-    };
-  }
+      phone: formValue.phone
+    },
+    shippingAddress: {
+      addressId: this.selectedCustomer?.shippingAddress?.addressId || 0,
+      streetLine1: formValue.streetLine1,
+      streetLine2: formValue.streetLine2,
+      city: formValue.city,
+      state: formValue.state,
+      postalCode: formValue.postalCode,
+      country: formValue.country
+    },
+    cartItems: this.cartItems,
+    subtotal: this.getSubtotal(),
+    tax: this.getTax(),
+    totalAmount: this.getTotal()
+  };
 
-  private updateCustomerAndCreateOrder(): void {
-    const formValue = this.checkoutForm.value;
-    const customerData = this.prepareCustomerData();
+  this.router.navigate(['/admin/payment'], { 
+    state: { orderData } 
+  });
+}
 
-    this.customerService.updateCustomer(
-      this.selectedCustomer!.customerId,
-      {
-        customerId: this.selectedCustomer!.customerId,
-        firstName: customerData.firstName,
-        lastName: customerData.lastName,
-        email: customerData.email,
-        phone: customerData.phone,
-        shippingAddress: {
-          ...customerData.shippingAddress,
-          addressId: 0 // Will be set by backend
-        }
-      }
-    ).subscribe({
-      next: (updatedCustomer) => {
-        if (updatedCustomer.shippingAddress?.addressId) {
-          this.createOrder(updatedCustomer.customerId, updatedCustomer.shippingAddress.addressId);
-        } else {
-          this.isLoading = false;
-          this.toastr.error('Failed to update shipping address', 'Error');
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.toastr.error('Failed to update customer', 'Error');
-      }
-    });
-  }
-
-  continueShopping(): void {
-    this.router.navigate(['/admin/inventory']);
-  }
+continueShopping(): void {
+  this.router.navigate(['/admin/inventory']);
+}
 }
