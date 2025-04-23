@@ -58,11 +58,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of order?.orderItems">
-            <td>{{item.cycle?.brand}} {{item.cycle?.model}}</td>
+          <tr *ngFor="let item of items">
+            <td>{{item.brand}} {{item.model}}</td>
             <td>{{item.quantity}}</td>
-            <td>{{item.unitPrice | currency:'INR'}}</td>
-            <td>{{item.totalPrice | currency:'INR'}}</td>
+            <td>{{item.price | currency:'INR'}}</td>
+            <td>{{item.quantity * item.price | currency:'INR'}}</td>
           </tr>
         </tbody>
         <tfoot>
