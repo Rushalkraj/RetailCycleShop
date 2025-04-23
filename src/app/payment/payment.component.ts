@@ -37,7 +37,7 @@ export class PaymentComponent {
     this.orderData = navigation?.extras?.state?.['orderData'];
     console.log('Order Data from navigation:', this.orderData);
     console.log('Shipping Address:', this.orderData?.shippingAddress);
-    console.log('Shipping Address ID:', this.orderData?.shippingAddress?.shippingAddressId);
+    console.log('Shipping Address ID:', this.orderData?.shippingAddress?.addressId);
 
 
 
@@ -72,19 +72,19 @@ export class PaymentComponent {
       this.paymentProcessing = false;
       return;
     }
-  
+
     if (!this.orderData.shippingAddress?.addressId) {
       this.toastr.error('Shipping address ID is missing', 'Error');
       this.paymentProcessing = false;
       return;
     }
-  
+
     if (!this.orderData.cartItems || this.orderData.cartItems.length === 0) {
       this.toastr.error('Cart is empty', 'Error');
       this.paymentProcessing = false;
       return;
     }
-  
+
 
     // Prepare the order data
     const orderCreateDto: OrderCreateDto = {
@@ -106,7 +106,7 @@ export class PaymentComponent {
       this.toastr.error('Customer information is missing', 'Error');
       return;
     }
-    if (!this.orderData.shippingAddress?.shippingAddressId) {
+    if (!this.orderData.shippingAddress?.addressId) {
       this.toastr.error('Shipping address is missing', 'Error');
       return;
     }

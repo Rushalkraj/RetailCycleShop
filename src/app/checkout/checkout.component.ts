@@ -22,7 +22,7 @@ export class CheckoutComponent implements OnInit {
   showCustomerForm = false;
   isNewCustomer = false;
   selectedCustomer: Customer | null = null;
-  
+
   PaymentMethod = {
     CreditCard: 'CREDIT_CARD',
     PayPal: 'PAYPAL',
@@ -67,7 +67,7 @@ export class CheckoutComponent implements OnInit {
       model: item.model || 'Unknown Model',
       price: item.price || 0,
       quantity: item.quantity || 1,
-      cycleId: item.cycleId ,
+      cycleId: item.cycleId,
       imageUrl: item.imageUrl || 'assets/default-cycle.jpg'
     }));
 
@@ -117,10 +117,10 @@ export class CheckoutComponent implements OnInit {
   }
 
   private enableCustomerForm(enable: boolean): void {
-    const controls = ['firstName', 'lastName', 'email', 'phone', 
-                     'streetLine1', 'streetLine2', 'city', 
-                     'state', 'postalCode', 'country'];
-    
+    const controls = ['firstName', 'lastName', 'email', 'phone',
+      'streetLine1', 'streetLine2', 'city',
+      'state', 'postalCode', 'country'];
+
     controls.forEach(control => {
       if (enable) {
         this.checkoutForm.get(control)?.enable();
@@ -259,44 +259,43 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-// In your checkout.component.ts
-proceedToPayment(): void {
-  if (this.checkoutForm.invalid) {
-    this.toastr.warning('Please fill all required fields', 'Form Incomplete');
-    return;
+  // In your checkout.component.ts
+  proceedToPayment(): void {
+    if (this.checkoutForm.invalid) {
+      this.toastr.warning('Please fill all required fields', 'Form Incomplete');
+      return;
+    }
+
+    const formValue = this.checkoutForm.value;
+
+    if (this.isNewCustomer) {
+      // For new customers, save them first
+      this.saveCustomer();
+      return; // saveCustomer will call proceedToPayment again after successful creation
+    }
+
+    const orderData = {
+      customerId: this.selectedCustomer?.customerId,
+      paymentMethod: formValue.paymentMethod,
+      customer: this.selectedCustomer,
+      shippingAddress: this.selectedCustomer?.shippingAddress,
+      cartItems: this.cartItems,
+      subtotal: this.getSubtotal(),
+      tax: this.getTax(),
+      totalAmount: this.getTotal()
+    };
+
+    // Log the order data before navigation
+    console.log('Proceeding to payment with order data:', orderData);
+    console.log('Selected customer:', this.selectedCustomer);
+    console.log('Shipping address:', this.selectedCustomer?.shippingAddress);
+
+    this.router.navigate(['/admin/payment'], {
+      state: { orderData }
+    });
   }
 
-  const formValue = this.checkoutForm.value;
-  const orderData = {
-    customerId: this.selectedCustomer?.customerId || 0,
-    paymentMethod: formValue.paymentMethod,
-    customer: {
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
-      phone: formValue.phone
-    },
-    shippingAddress: {
-      addressId: this.selectedCustomer?.shippingAddress?.addressId || 0,
-      streetLine1: formValue.streetLine1,
-      streetLine2: formValue.streetLine2,
-      city: formValue.city,
-      state: formValue.state,
-      postalCode: formValue.postalCode,
-      country: formValue.country
-    },
-    cartItems: this.cartItems,
-    subtotal: this.getSubtotal(),
-    tax: this.getTax(),
-    totalAmount: this.getTotal()
-  };
-
-  this.router.navigate(['/admin/payment'], { 
-    state: { orderData } 
-  });
-}
-
-continueShopping(): void {
-  this.router.navigate(['/admin/inventory']);
-}
+  continueShopping(): void {
+    this.router.navigate(['/admin/inventory']);
+  }
 }
