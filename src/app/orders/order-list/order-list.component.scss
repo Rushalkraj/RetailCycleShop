@@ -1,65 +1,103 @@
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #34495e;
+  --accent-color: #3498db;
+  --success-color: #27ae60;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --light-color: #ecf0f1;
+  --dark-color: #2c3e50;
+  --text-color: #333;
+  --text-light: #7f8c8d;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+  --white: #ffffff;
+}
 .order-management {
   .card {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
     
     .card-header {
       border-radius: 10px 10px 0 0 !important;
-    }
-    
-    .table {
-      th {
-        position: sticky;
-        top: 0;
-        background-color: #f8f9fa;
-      }
+      background-color: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
       
-      .order-row:hover {
-        background-color: rgba(0, 0, 0, 0.02);
+      .bi-eye {
+        font-size: 1.2rem;
       }
     }
-    
-    .status-select {
-      min-width: 120px;
+  }
+  
+  .orders-grid {
+    .order-card {
+      height: 100%;
       
-      &.status-pending {
-        background-color: #fff3cd;
-        border-color: #ffe69c;
+      .card-body {
+        padding: 1.25rem;
       }
       
-      &.status-processing {
-        background-color: #cfe2ff;
-        border-color: #9ec5fe;
+      .customer-info {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        padding-bottom: 1rem;
       }
       
-      &.status-completed {
-        background-color: #d1e7dd;
-        border-color: #a3cfbb;
-      }
-      
-      &.status-cancelled {
-        background-color: #f8d7da;
-        border-color: #f1aeb5;
+      .order-details {
+        padding-top: 0.5rem;
       }
     }
+  }
+  
+  .status-select {
+    min-width: 120px;
     
-    .avatar {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      font-size: 0.8rem;
+    &.status-pending {
+      background-color: #fff3cd;
+      border-color: #ffe69c;
+      color: #997404;
     }
     
-    .pagination {
-      .page-item {
-        cursor: pointer;
-        
-        &.active .page-link {
-          background-color: #0d6efd;
-          border-color: #0d6efd;
-        }
+    &.status-processing {
+      background-color: #cfe2ff;
+      border-color: #9ec5fe;
+      color: #084298;
+    }
+    
+    &.status-completed {
+      background-color: #d1e7dd;
+      border-color: #a3cfbb;
+      color: #0a3622;
+    }
+    
+    &.status-cancelled {
+      background-color: #f8d7da;
+      border-color: #f1aeb5;
+      color: #842029;
+    }
+  }
+  
+  .avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+  
+  .pagination {
+    .page-item {
+      cursor: pointer;
+      
+      &.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
       }
     }
   }
@@ -84,12 +122,17 @@
   
   .btn-group {
     .btn {
-      border-radius: 20px !important;
-      margin-right: 0.5rem;
-      
       &.active {
         background-color: #0d6efd;
         color: white;
+      }
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .orders-grid {
+      .order-card {
+        margin-bottom: 1rem;
       }
     }
   }

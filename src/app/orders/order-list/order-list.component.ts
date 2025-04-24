@@ -33,6 +33,13 @@ export class OrderListComponent implements OnInit {
     { value: OrderStatus.Completed, label: 'Completed' },
     { value: OrderStatus.Cancelled, label: 'Cancelled' }
   ];
+selectedType: any;
+availableTypes: any;
+selectedBrand: any;
+availableBrands: any;
+priceRange: any;
+isCustomerView: any;
+cartItemCount: any;
 
   constructor(
     private orderService: OrderService,
@@ -73,7 +80,7 @@ export class OrderListComponent implements OnInit {
   private applyFilters(): void {
     // Apply search filter first
     let result = [...this.orders];
-    
+
     if (this.searchTerm) {
       result = result.filter(order =>
         order.customer.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
@@ -133,31 +140,30 @@ export class OrderListComponent implements OnInit {
   }
 
   confirmDelete(order: Order): void {
-   
-    
+
+
     this.confirmationService.confirm({
       message: `Are you sure you want to delete order ${order.orderNumber}? This action cannot be undone.`,
-      
+
       header: 'Confirm Deletion',
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.deleteOrder(order)
     });
 
   }
- 
+
 
   deleteOrder(order: Order): void {
+    this.loading = true;
     this.orderService.deleteOrder(order.orderId).subscribe({
       next: () => {
-        
         this.toastr.success('Order deleted successfully', 'Success');
-        // Remove the deleted order from the arrays
-        this.orders = this.orders.filter(o => o.orderId !== order.orderId);
-        this.applyFilters();
+        this.fetchOrders(); // Refresh the entire order list
       },
       error: (err) => {
         console.error('Error deleting order', err);
         this.toastr.error('Failed to delete order', 'Error');
+        this.loading = false;
       }
     });
   }

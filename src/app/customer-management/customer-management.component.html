@@ -45,12 +45,13 @@
           
           <td>
             <div class="btn-group">
-            <button class="btn btn-sm btn-primary" (click)="navigateToEditCustomer(customer.customerId)">
-              <i class="bi bi-pencil"></i> Edit
+            <button class="btn btn-sm btn-outline-primary"  (click)="navigateToEditCustomer(customer.customerId)">
+              <i class="bi bi-pencil"></i> 
             </button>
-            <button *ngIf="userRole=='Admin'" class="btn btn-sm btn-danger" (click)="deleteCustomer(customer.customerId)">
-              <i class="bi bi-trash"></i> Delete
+            <button *ngIf="userRole=='Admin'" class="btn btn-sm btn-outline-danger"  (click)="deleteCustomer(customer.customerId)">
+              <i class="bi bi-trash"></i> 
             </button>
+            
           </div>
         </tr>
       </tbody>

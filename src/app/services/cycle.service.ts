@@ -24,9 +24,30 @@ export class CycleService {
   }
 
   addCycle(cycle: Omit<Cycle, 'cycleId'>): Observable<Cycle> {
-    return this.http.post<Cycle>(this.apiUrl, cycle).pipe(
-      catchError(this.handleError)
-    );
+    return new Observable(observer => {
+      this.getCycles().subscribe({
+        next: (cycles) => {
+          const existingCycle = cycles.find(c =>
+            c.brand.toLowerCase() === cycle.brand.toLowerCase() &&
+            c.type.toLowerCase() === cycle.type.toLowerCase() &&
+            c.model.toLowerCase() === cycle.model.toLowerCase()
+          );
+
+          if (existingCycle) {
+            observer.error(new Error('A cycle with the same brand, type, and model already exists.'));
+          } else {
+            this.http.post<Cycle>(this.apiUrl, cycle).pipe(
+              catchError(this.handleError)
+            ).subscribe({
+              next: (result) => observer.next(result),
+              error: (error) => observer.error(error),
+              complete: () => observer.complete()
+            });
+          }
+        },
+        error: (error) => observer.error(error)
+      });
+    });
   }
 
   updateCycle(id: number, cycle: Omit<Cycle, 'cycleId'>): Observable<Cycle> {

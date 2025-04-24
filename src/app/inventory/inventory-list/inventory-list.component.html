@@ -1,47 +1,90 @@
+<!-- inventory-list.component.html -->
 <div class="inventory-container">
-  <div class="header-row d-flex justify-content-between align-items-center mb-4">
-    <h2>Inventory</h2>
-
-
-    <button class="cart-icon-btn position-relative" (click)="navigateToCart()">
-      <i class="bi bi-cart-fill fs-3"></i>
-      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-        {{ cartItemCount }}
-        <span class="visually-hidden">items in cart</span>
-      </span>
-    </button>
-  </div>
-
-  
-  <div class="mb-4 text-end">
-    <button class="add-btn" (click)="navigateToAddCycle()">➕ Add New Cycle</button>
-  </div>
-
-  <div class="cycle-grid">
-    <div class="cycle-card" *ngFor="let cycle of cycles">
-      <img *ngIf="cycle.imageUrl" [src]="cycle.imageUrl" alt="Cycle Image" class="cycle-image" />
-
-      <div class="cycle-info">
-        <h4>{{ cycle.brand }} {{ cycle.model }}</h4>
-        <p><strong>Type:</strong> {{ cycle.type }}</p>
-        <p><strong>Price:</strong> {{ cycle.price | currency: 'INR' }}</p>
-        <p><strong>Stock:</strong> {{ cycle.stockQuantity }}</p>
-
-        <div class="btn-group">
-          
-          <button class="btn btn-primary" (click)="addToCart(cycle)">
-            <i class="bi bi-cart-plus"></i> Add to Cart
-          </button>
-
+  <div class="inventory-header">
+    <div class="header-left">
+      <h1>Inventory Management</h1>
       
-          <button *ngIf="!isCustomerView" class="btn btn-secondary" (click)="navigateToEdit(cycle.cycleId)">
-            <i class="bi bi-pencil"></i> Edit
-          </button>
-          <button *ngIf="!isCustomerView && userRole=='Admin'" class="btn btn-danger" (click)="deleteCycle(cycle.cycleId)">
-            <i class="bi bi-trash"></i> Delete
-          </button>
+      <div class="search-filter-container">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" [(ngModel)]="searchText" 
+                 placeholder="Search cycles..." (input)="applyFilters()">
+        </div>
+        
+        <div class="filter-controls">
+          <select [(ngModel)]="selectedType" (change)="applyFilters()">
+            <option value="">All Types</option>
+            <option *ngFor="let type of availableTypes" [value]="type">{{ type }}</option>
+          </select>
+          
+          <select [(ngModel)]="selectedBrand" (change)="applyFilters()">
+            <option value="">All Brands</option>
+            <option *ngFor="let brand of availableBrands" [value]="brand">{{ brand }}</option>
+          </select>
+          
+          <select [(ngModel)]="priceRange" (change)="applyFilters()">
+            <option value="">All Price Ranges</option>
+            <option value="0-5000">Under ₹5,000</option>
+            <option value="5000-10000">₹5,000 - ₹10,000</option>
+            <option value="10000-20000">₹10,000 - ₹20,000</option>
+            <option value="20000-50000">₹20,000 - ₹50,000</option>
+            <option value="50000-999999">Over ₹50,000</option>
+          </select>
         </div>
       </div>
     </div>
+    
+    <div class="header-right">
+      <button *ngIf="!isCustomerView" class="add-new-btn" (click)="navigateToAddCycle()">
+        <i class="bi bi-plus-lg"></i> Add New Cycle
+      </button>
+      
+      <button class="cart-icon-btn position-relative" (click)="navigateToCart()">
+        <i class="bi bi-cart-fill"></i>
+        <span class="cart-badge">{{ cartItemCount }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="cycle-cards-container">
+    <div *ngFor="let cycle of filteredCycles" class="cycle-card">
+      <div class="cycle-image-container">
+        <img *ngIf="cycle.imageUrl" [src]="cycle.imageUrl" alt="{{cycle.brand}} {{cycle.model}}" 
+             class="cycle-image" (error)="handleImageError($event)">
+        <div *ngIf="!cycle.imageUrl" class="image-placeholder">
+          <i class="bi bi-bicycle"></i>
+        </div>
+      </div>
+      
+      <div class="cycle-info">
+        <h3 class="cycle-name">{{ cycle.model }}</h3>
+        <p class="cycle-brand"><strong>Brand:</strong> {{ cycle.brand }}</p>
+        <p class="cycle-stock"><strong>Stock:</strong> {{ cycle.stockQuantity }} units</p>
+        <p class="cycle-type"><strong>Type:</strong>{{cycle.type}}</p>
+        <p class="cycle-price"><strong>Price:</strong> ₹{{ cycle.price | number }}</p>
+       
+        
+        <div class="action-buttons">
+          <button class="btn-add-to-cart" (click)="addToCart(cycle)" 
+                  [disabled]="cycle.stockQuantity <= 0">
+            <i class="bi bi-cart-plus"></i> Add to Cart
+          </button>
+          
+          <div *ngIf="!isCustomerView" class="admin-actions">
+            <button class="btn-edit" (click)="navigateToEdit(cycle.cycleId)">
+              <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button *ngIf="userRole=='Admin'" class="btn-delete" (click)="deleteCycle(cycle.cycleId)">
+              <i class="bi bi-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="filteredCycles.length === 0 && !loading" class="empty-state">
+    <i class="bi bi-bicycle"></i>
+    <p>No cycles found matching your criteria</p>
   </div>
 </div>

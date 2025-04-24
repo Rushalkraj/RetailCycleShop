@@ -87,7 +87,7 @@
                   </option>
                 </select>
               </td>
-              <td>{{ order.orderItems?.length || 0 }}</td>
+              <td>{{ order.orderItems.length || 0 }}</td>
               <td class="fw-bold">{{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</td>
               <td>
                 <div class="d-flex gap-2">
@@ -96,11 +96,11 @@
                           title="View Details">
                     <i class="bi bi-eye"></i>
                   </button>
-                  <button class="btn btn-sm btn-outline-danger" 
+                  <!-- <button class="btn btn-sm btn-outline-danger" 
                           (click)="confirmDelete(order)"
                           title="Delete Order">
                     <i class="bi bi-trash"></i>
-                  </button>
+                  </button> -->
                 </div>
               </td>
             </tr>
