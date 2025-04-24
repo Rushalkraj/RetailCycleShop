@@ -25,6 +25,7 @@
 
 
       <p-card class="warning" header="Low Stock">
+        <ng-template pTemplate="content">
         <div class="card-content">
           <h2>{{ summary.lowStock }}</h2>
           <p>Items needing restock</p>
@@ -35,6 +36,7 @@
             [queryParams]="{filter: 'low'}">
           </p-button>
         </div>
+      </ng-template>
       </p-card>
     </div>
 
