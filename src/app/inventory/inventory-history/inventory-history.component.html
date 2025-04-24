@@ -22,18 +22,7 @@
   <div *ngIf="!loading && summary" class="dashboard-content">
     <!-- Stock Alerts -->
     <div class="alert-cards">
-      <p-card class="critical" header="Critical Stock">
-        <div class="card-content">
-          <h2>{{ summary.criticalStock }}</h2>
-          <p>Items with ≤ 2 in stock</p>
-          <p-button 
-            icon="pi pi-arrow-right" 
-            label="View" 
-            [routerLink]="['/admin/inventory']"
-            [queryParams]="{filter: 'critical'}">
-          </p-button>
-        </div>
-      </p-card>
+
 
       <p-card class="warning" header="Low Stock">
         <div class="card-content">
@@ -42,7 +31,7 @@
           <p-button 
             icon="pi pi-arrow-right" 
             label="View" 
-            [routerLink]="['/admin/inventory']"
+            [routerLink]="userRole === 'Admin' ? ['/admin/inventory'] : ['/employee/inventory']"
             [queryParams]="{filter: 'low'}">
           </p-button>
         </div>

@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { InventoryHistoryService } from '../../services/inventory-history.service';
 import { MessageService } from 'primeng/api';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface InventorySummary {
   criticalStock: number;
   lowStock: number;
   recentActivity: any[];
   weeklyChanges: any[];
+  
+  
 }
 
 @Component({
@@ -19,6 +22,7 @@ export class InventoryHistoryComponent implements OnInit {
   summary: InventorySummary | null = null;
   loading = true;
   selectedDays = 7;
+  userRole: string | null = null;
 
   // Chart data
   chartData: any;
@@ -26,12 +30,14 @@ export class InventoryHistoryComponent implements OnInit {
 
   constructor(
     private inventoryService: InventoryHistoryService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private  authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.loadSummary();
     this.initChart();
+    this.userRole = this.authService.getUserRole();
   }
 
   loadSummary(days: number = 7): void {
