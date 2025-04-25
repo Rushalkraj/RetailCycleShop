@@ -17,7 +17,7 @@ export class CustomerEditComponent implements OnInit {
   customerId?: number;
   isLoading = false;
   customer?: Customer;
-  userRole: string | null = null;
+  userRole: string| null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -63,7 +63,7 @@ export class CustomerEditComponent implements OnInit {
     this.customerService.getCustomerById(this.customerId!).subscribe({
       next: (customer) => {
         this.customer = customer;
-
+        
         // Patch basic customer info
         this.customerForm.patchValue({
           firstName: customer.firstName,
@@ -84,7 +84,7 @@ export class CustomerEditComponent implements OnInit {
             country: customer.shippingAddress.country || ''
           });
         }
-
+        
         this.isLoading = false;
       },
       error: (err) => {
@@ -107,10 +107,10 @@ export class CustomerEditComponent implements OnInit {
       this.toastr.warning('Please fill all required fields', 'Validation Error');
       return;
     }
-
+  
     this.isLoading = true;
     const formValue = this.customerForm.value;
-
+  
     if (this.isEditMode) {
       const updateData = {
         customerId: this.customerId!,
@@ -118,7 +118,7 @@ export class CustomerEditComponent implements OnInit {
         lastName: formValue.lastName,
         email: formValue.email,
         phone: formValue.phone,
-        address: {
+        Address: {  
           addressId: this.customer?.shippingAddress?.addressId || 0,
           streetLine1: formValue.shippingAddress.streetLine1,
           streetLine2: formValue.shippingAddress.streetLine2,
@@ -130,17 +130,17 @@ export class CustomerEditComponent implements OnInit {
           isDefaultBilling: false
         }
       };
-
+  
       this.customerService.updateCustomer(this.customerId!, updateData)
         .subscribe({
           next: () => {
             this.toastr.success('Customer updated successfully');
-            if (this.userRole === 'Admin') {
+            if(this.userRole === 'Admin'){
               this.router.navigate(['/admin/customers']);
-            }
-            else if (this.userRole === 'Employee') {
-              this.router.navigate(['/employee/customers']);
-            }
+              }
+              else if(this.userRole==='Employee'){
+                this.router.navigate(['/employee/customers']);
+              }
           },
           error: (err) => {
             this.isLoading = false;
@@ -149,7 +149,7 @@ export class CustomerEditComponent implements OnInit {
             this.toastr.error(errorMessage, 'Error');
           }
         });
-    } else {
+    }  else {
       const createData = {
         firstName: formValue.firstName,
         lastName: formValue.lastName,
@@ -171,10 +171,10 @@ export class CustomerEditComponent implements OnInit {
         .subscribe({
           next: () => {
             this.toastr.success('Customer created successfully');
-            if (this.userRole === 'Admin') {
-              this.router.navigate(['/admin/customers']);
+            if(this.userRole === 'Admin'){
+            this.router.navigate(['/admin/customers']);
             }
-            else if (this.userRole === 'Employee') {
+            else if(this.userRole==='Employee'){
               this.router.navigate(['/employee/customers']);
             }
           },

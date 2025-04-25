@@ -124,19 +124,7 @@ cartItemCount: any;
         this.applyFilters();
       }
     });
-    this.loading = true;
-    this.orderService.getAllOrders().subscribe({
-      next: (data) => {
-        this.orders = data;
-        this.applyFilters();
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching orders', err);
-        this.toastr.error('Failed to load orders', 'Error');
-        this.loading = false;
-      }
-    });
+  
   }
 
   confirmDelete(order: Order): void {

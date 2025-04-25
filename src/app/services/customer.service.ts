@@ -51,16 +51,16 @@ export class CustomerService {
   }
 
   deleteCustomer(customerId: number): Observable<void> {
-    // const userRole = this.authService.getUserRole();  
+    const userRole = this.authService.getUserRole();  // ✅ Get role from AuthService
 
-    // if (userRole === 'Admin') {
+    if (userRole === 'Admin') {
       return this.http.delete<void>(`${this.apiUrl}/${customerId}`);
-    // } else if (userRole === 'employee') {
-    //   alert('You do not have permission to delete customers.');
-    //   return EMPTY;
-    // } else {
-    //   alert('Invalid user role.');
-    //   return EMPTY;
-    // }
+    } else if (userRole === 'employee') {
+      alert('You do not have permission to delete customers.');
+      return EMPTY;
+    } else {
+      alert('Invalid user role.');
+      return EMPTY;
+    }
   }
 }
