@@ -24,23 +24,23 @@ export class EmployeeListComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private toastr: ToastrService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
-  
-    ngOnInit(): void {
-      this.loadEmployees();
-    }
-  
-    searchEmployees(): void {
-      this.filteredEmployees = this.employees.filter(employee =>
-        employee.fullName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        employee.email.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    }
-  
-    get displayedEmployees(): any[] {
-      return this.searchTerm ? this.filteredEmployees : this.employees;
-    }
+
+  ngOnInit(): void {
+    this.loadEmployees();
+  }
+
+  searchEmployees(): void {
+    this.filteredEmployees = this.employees.filter(employee =>
+      employee.fullName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      employee.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+
+  get displayedEmployees(): any[] {
+    return this.searchTerm ? this.filteredEmployees : this.employees;
+  }
   loadEmployees(): void {
     this.loading = true;
     this.employeeService.getEmployees().subscribe({
@@ -66,10 +66,10 @@ export class EmployeeListComponent implements OnInit {
       backdropClass: 'dialog-backdrop',
       data: { employee }
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // Handle successful edit
+        this.loadEmployees();
       }
     });
   }
@@ -82,7 +82,7 @@ export class EmployeeListComponent implements OnInit {
       accept: () => this.deleteEmployee(employee.id)
     });
   }
-  
+
 
   deleteEmployee(id: string): void {
     this.employeeService.deleteEmployee(id).subscribe({

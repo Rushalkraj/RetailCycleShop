@@ -34,6 +34,19 @@
                      placeholder="1234 5678 9012 3456"
                      maxlength="19">
             </div>
+                    <div
+          *ngFor="let method of paymentMethods"
+          class="payment-method p-3 border rounded cursor-pointer"
+          [ngClass]="{'border-primary': selectedMethod === method.value}"
+          (click)="selectedMethod = method.value">
+          <i class="bi" [ngClass]="{
+            'bi-credit-card': method.value === PaymentMethod.CreditCard,
+            'bi-paypal': method.value === PaymentMethod.PayPal,
+            'bi-bank': method.value === PaymentMethod.BankTransfer,
+            'bi-currency-rupee': method.value === PaymentMethod.Razorpay
+          }"></i>
+          <span class="ms-2">{{ method.label }}</span>
+        </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">

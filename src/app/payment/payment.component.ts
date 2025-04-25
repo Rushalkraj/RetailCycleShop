@@ -1,10 +1,10 @@
-// payment.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderService } from '../services/order.service';
 import { ToastrService } from 'ngx-toastr';
 import { OrderCreateDto } from '../models/order.model';
 import { PaymentMethod } from '../models/payment.model';
+import { PaymentService } from '../services/payment.service';
 
 @Component({
   selector: 'app-payment',
@@ -25,22 +25,19 @@ export class PaymentComponent {
   paymentMethods = [
     { value: PaymentMethod.CreditCard, label: 'Credit Card', icon: 'credit_card' },
     { value: PaymentMethod.PayPal, label: 'PayPal', icon: 'paypal' },
-    { value: PaymentMethod.BankTransfer, label: 'Bank Transfer', icon: 'account_balance' }
+    { value: PaymentMethod.BankTransfer, label: 'Bank Transfer', icon: 'account_balance' },
+    { value: PaymentMethod.Razorpay, label: 'Razorpay', icon: 'currency_rupee' }
   ];
 
   constructor(
     private router: Router,
     private orderService: OrderService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private paymentService: PaymentService
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.orderData = navigation?.extras?.state?.['orderData'];
-    console.log('Order Data from navigation:', this.orderData);
-    console.log('Shipping Address:', this.orderData?.shippingAddress);
-    console.log('Shipping Address ID:', this.orderData?.shippingAddress?.addressId);
-
-
-
+    
     if (!this.orderData) {
       this.toastr.error('No order data found', 'Error');
       this.router.navigate(['/checkout']);
@@ -56,19 +53,19 @@ export class PaymentComponent {
     return true;
   }
 
-  processPayment(): void {
+  async processPayment(): Promise<void> {
     if (!this.orderData || !this.isPaymentFormValid()) return;
+  
+    if (this.selectedMethod === PaymentMethod.Razorpay) {
+      await this.processRazorpayPayment();
+      return;
+    }
 
     this.paymentProcessing = true;
 
-    // Validate customer exists
-    if (!this.orderData.customer?.customerId) {
+    // Validate required data
+    if (!this.orderData.customer?.customerId || !this.orderData.customerId) {
       this.toastr.error('Customer information is missing', 'Error');
-      this.paymentProcessing = false;
-      return;
-    }
-    if (!this.orderData.customerId) {
-      this.toastr.error('Customer ID is missing', 'Error');
       this.paymentProcessing = false;
       return;
     }
@@ -85,11 +82,10 @@ export class PaymentComponent {
       return;
     }
 
-
     // Prepare the order data
     const orderCreateDto: OrderCreateDto = {
-      customerId: this.orderData.customerId, // Use direct customerId
-      shippingAddressId: this.orderData.shippingAddress.addressId, // Use addressId from shippingAddress
+      customerId: this.orderData.customerId,
+      shippingAddressId: this.orderData.shippingAddress.addressId,
       subtotal: this.orderData.subtotal,
       tax: this.orderData.tax,
       totalAmount: this.orderData.totalAmount,
@@ -102,25 +98,10 @@ export class PaymentComponent {
         model: item.model
       }))
     };
-    if (!this.orderData.customer?.customerId) {
-      this.toastr.error('Customer information is missing', 'Error');
-      return;
-    }
-    if (!this.orderData.shippingAddress?.addressId) {
-      this.toastr.error('Shipping address is missing', 'Error');
-      return;
-    }
-    if (!this.orderData.cartItems || this.orderData.cartItems.length === 0) {
-      this.toastr.error('Cart is empty', 'Error');
-      return;
-    }
-
-    console.log('Submitting order:', orderCreateDto);
 
     // Create the order
     this.orderService.createOrder(orderCreateDto).subscribe({
       next: (createdOrder) => {
-        console.log('Order created successfully:', createdOrder);
         this.paymentProcessing = false;
         this.toastr.success('Payment processed successfully', 'Success');
         this.router.navigate(['/admin/order-confirmation'], {
@@ -133,18 +114,80 @@ export class PaymentComponent {
         });
       },
       error: (err) => {
-        console.error('Full error details:', err);
-        if (err.error && err.error.errors) {
-          console.error('Validation errors:', err.error.errors);
-        }
         this.paymentProcessing = false;
         this.toastr.error(this.getErrorMessage(err), 'Payment Failed');
       }
     });
   }
 
+  private async processRazorpayPayment(): Promise<void> {
+    this.paymentProcessing = true;
+  
+    try {
+      // Create Razorpay order
+      const orderResponse: any = await this.paymentService
+        .createRazorpayOrder(this.orderData.orderId, this.orderData.totalAmount)
+        .toPromise();
+  
+      // Razorpay options
+      const options = {
+        key: 'your_razorpay_key_id',
+        amount: orderResponse.amount,
+        currency: orderResponse.currency,
+        name: 'Retail Cycle Shop',
+        description: `Order #${this.orderData.orderNumber}`,
+        image: '/assets/logo.png',
+        order_id: orderResponse.id,
+        handler: async (response: any) => {
+          const verificationData = {
+            orderId: this.orderData.orderId,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+            amount: this.orderData.totalAmount
+          };
+  
+          const verificationResponse = await this.paymentService
+            .verifyPayment(verificationData)
+            .toPromise();
+  
+          if (verificationResponse.success) {
+            this.toastr.success('Payment processed successfully', 'Success');
+            this.router.navigate(['/order-confirmation'], {
+              state: {
+                order: this.orderData,
+                paymentId: verificationResponse.paymentId
+              }
+            });
+          } else {
+            this.toastr.error('Payment verification failed', 'Error');
+          }
+        },
+        prefill: {
+          name: this.orderData.customer?.name || '',
+          email: this.orderData.customer?.email || '',
+          contact: this.orderData.customer?.phone || ''
+        },
+        notes: {
+          address: this.orderData.shippingAddress?.addressLine1 || '',
+          orderId: this.orderData.orderNumber
+        },
+        theme: {
+          color: '#3399cc'
+        }
+      };
+  
+      await this.paymentService.openRazorpay(options);
+    } catch (error) {
+      console.error('Payment error:', error);
+      this.toastr.error('Payment processing failed', 'Error');
+    } finally {
+      this.paymentProcessing = false;
+    }
+  }
+
   private getErrorMessage(err: any): string {
-    if (err.message.includes('Customer not found')) {
+    if (err.message?.includes('Customer not found')) {
       return 'The customer associated with this order was not found. Please contact support.';
     }
     if (err.status === 400) {
