@@ -26,7 +26,7 @@ export class PaymentComponent {
     { value: PaymentMethod.CreditCard, label: 'Credit Card', icon: 'credit_card' },
     { value: PaymentMethod.PayPal, label: 'PayPal', icon: 'paypal' },
     { value: PaymentMethod.BankTransfer, label: 'Bank Transfer', icon: 'account_balance' },
-    { value: PaymentMethod.Razorpay, label: 'Razorpay', icon: 'currency_rupee' }
+    { value: PaymentMethod.cashfree, label: 'Cashfree', icon: 'currency_rupee' }
   ];
 
   constructor(
@@ -56,8 +56,8 @@ export class PaymentComponent {
   async processPayment(): Promise<void> {
     if (!this.orderData || !this.isPaymentFormValid()) return;
   
-    if (this.selectedMethod === PaymentMethod.Razorpay) {
-      await this.processRazorpayPayment();
+    if (this.selectedMethod === PaymentMethod.cashfree) {
+      await this.processCashfreePayment();
       return;
     }
 
@@ -89,7 +89,7 @@ export class PaymentComponent {
       subtotal: this.orderData.subtotal,
       tax: this.orderData.tax,
       totalAmount: this.orderData.totalAmount,
-      paymentMethod: this.selectedMethod.toString().toUpperCase(),
+      paymentMethod: this.selectedMethod.toString(),
       items: this.orderData.cartItems.map((item: any) => ({
         cycleId: item.cycleId,
         quantity: item.quantity,
@@ -120,64 +120,21 @@ export class PaymentComponent {
     });
   }
 
-  private async processRazorpayPayment(): Promise<void> {
+  private async processCashfreePayment(): Promise<void> {
     this.paymentProcessing = true;
   
     try {
-      // Create Razorpay order
+      // Create Cashfree order
       const orderResponse: any = await this.paymentService
-        .createRazorpayOrder(this.orderData.orderId, this.orderData.totalAmount)
+        .createCashfreeOrder(this.orderData.orderId, this.orderData.totalAmount)
         .toPromise();
   
-      // Razorpay options
-      const options = {
-        key: 'your_razorpay_key_id',
-        amount: orderResponse.amount,
-        currency: orderResponse.currency,
-        name: 'Retail Cycle Shop',
-        description: `Order #${this.orderData.orderNumber}`,
-        image: '/assets/logo.png',
-        order_id: orderResponse.id,
-        handler: async (response: any) => {
-          const verificationData = {
-            orderId: this.orderData.orderId,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpayOrderId: response.razorpay_order_id,
-            razorpaySignature: response.razorpay_signature,
-            amount: this.orderData.totalAmount
-          };
-  
-          const verificationResponse = await this.paymentService
-            .verifyPayment(verificationData)
-            .toPromise();
-  
-          if (verificationResponse.success) {
-            this.toastr.success('Payment processed successfully', 'Success');
-            this.router.navigate(['/order-confirmation'], {
-              state: {
-                order: this.orderData,
-                paymentId: verificationResponse.paymentId
-              }
-            });
-          } else {
-            this.toastr.error('Payment verification failed', 'Error');
-          }
-        },
-        prefill: {
-          name: this.orderData.customer?.name || '',
-          email: this.orderData.customer?.email || '',
-          contact: this.orderData.customer?.phone || ''
-        },
-        notes: {
-          address: this.orderData.shippingAddress?.addressLine1 || '',
-          orderId: this.orderData.orderNumber
-        },
-        theme: {
-          color: '#3399cc'
-        }
-      };
-  
-      await this.paymentService.openRazorpay(options);
+      if (orderResponse.payment_link) {
+        // Redirect to Cashfree payment page
+        this.paymentService.redirectToCashfree(orderResponse.payment_link);
+      } else {
+        this.toastr.error('Failed to create payment link', 'Error');
+      }
     } catch (error) {
       console.error('Payment error:', error);
       this.toastr.error('Payment processing failed', 'Error');

@@ -19,7 +19,12 @@
               [ngClass]="{'border-primary': selectedMethod === method.value}"
               (click)="selectedMethod = method.value"
             >
-              <i class="bi bi-{{ method.icon }}"></i>
+              <i class="bi" [ngClass]="{
+                'bi-credit-card': method.value === PaymentMethod.CreditCard,
+                'bi-paypal': method.value === PaymentMethod.PayPal,
+                'bi-bank': method.value === PaymentMethod.BankTransfer,
+                'bi-currency-rupee': method.value === PaymentMethod.cashfree
+              }"></i>
               <span class="ms-2">{{ method.label }}</span>
             </div>
           </div>
@@ -34,19 +39,6 @@
                      placeholder="1234 5678 9012 3456"
                      maxlength="19">
             </div>
-                    <div
-          *ngFor="let method of paymentMethods"
-          class="payment-method p-3 border rounded cursor-pointer"
-          [ngClass]="{'border-primary': selectedMethod === method.value}"
-          (click)="selectedMethod = method.value">
-          <i class="bi" [ngClass]="{
-            'bi-credit-card': method.value === PaymentMethod.CreditCard,
-            'bi-paypal': method.value === PaymentMethod.PayPal,
-            'bi-bank': method.value === PaymentMethod.BankTransfer,
-            'bi-currency-rupee': method.value === PaymentMethod.Razorpay
-          }"></i>
-          <span class="ms-2">{{ method.label }}</span>
-        </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -83,6 +75,11 @@
               <tr><th>IFSC Code:</th><td>RCSB0000123</td></tr>
               <tr><th>Reference:</th><td>ORDER-{{ orderData?.orderNumber || 'N/A' }}</td></tr>
             </table>
+          </div>
+
+          <!-- Cashfree Info -->
+          <div *ngIf="selectedMethod === PaymentMethod.cashfree" class="alert alert-info mt-3">
+            <i class="bi bi-info-circle"></i> You will be redirected to Cashfree to complete your payment securely.
           </div>
         </div>
       </div>

@@ -5,7 +5,9 @@ import { AuthService } from 'src/app/services/auth.service';
 
 interface InventorySummary {
   criticalStock: number;
+
   lowStock: number;
+  outOfStock: number;
   recentActivity: any[];
   weeklyChanges: any[];
   

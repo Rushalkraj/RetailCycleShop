@@ -7,10 +7,7 @@
   </div>
 
   <div class="controls">
-    <p-dropdown 
-      [(ngModel)]="selectedDays" 
-      [options]="[7, 14, 30]" 
-      (onChange)="loadSummary(selectedDays)"
+    <p-dropdown [(ngModel)]="selectedDays" [options]="[7, 14, 30]" (onChange)="loadSummary(selectedDays)"
       placeholder="Select days">
     </p-dropdown>
   </div>
@@ -22,32 +19,37 @@
   <div *ngIf="!loading && summary" class="dashboard-content">
     <!-- Stock Alerts -->
     <div class="alert-cards">
-
+      <p-card class="critical" header="Out of Stock">
+        <ng-template pTemplate="content">
+          <div class="card-content">
+            <h2>{{ summary.outOfStock }}</h2>
+            <p>Cycles out of stock</p>
+            <p-button icon="pi pi-arrow-right" label="View"
+              [routerLink]="userRole === 'Admin' ? ['/admin/inventory'] : ['/employee/inventory']"
+              [queryParams]="{filter: 'out'}">
+            </p-button>
+          </div>
+        </ng-template>
+      </p-card>
 
       <p-card class="warning" header="Low Stock">
         <ng-template pTemplate="content">
-        <div class="card-content">
-          <h2>{{ summary.lowStock }}</h2>
-          <p>Items needing restock</p>
-          <p-button 
-            icon="pi pi-arrow-right" 
-            label="View" 
-            [routerLink]="userRole === 'Admin' ? ['/admin/inventory'] : ['/employee/inventory']"
-            [queryParams]="{filter: 'low'}">
-          </p-button>
-        </div>
-      </ng-template>
+          <div class="card-content">
+            <h2>{{ summary.lowStock }}</h2>
+            <p>Items needing restock</p>
+            <p-button icon="pi pi-arrow-right" label="View"
+              [routerLink]="userRole === 'Admin' ? ['/admin/inventory'] : ['/employee/inventory']"
+              [queryParams]="{filter: 'low'}">
+            </p-button>
+          </div>
+        </ng-template>
       </p-card>
     </div>
 
     <!-- Activity Chart -->
     <div class="chart-card">
       <p-card header="Weekly Inventory Changes">
-        <p-chart 
-          type="bar" 
-          [data]="chartData" 
-          [options]="chartOptions"
-          height="300px">
+        <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="300px">
         </p-chart>
       </p-card>
     </div>
@@ -55,11 +57,7 @@
     <!-- Recent Activity -->
     <div class="activity-card">
       <p-card header="Recent Inventory Changes">
-        <p-table 
-          [value]="summary.recentActivity" 
-          [paginator]="true" 
-          [rows]="5"
-          styleClass="p-datatable-sm">
+        <p-table [value]="summary.recentActivity" [paginator]="true" [rows]="5" styleClass="p-datatable-sm">
           <ng-template pTemplate="header">
             <tr>
               <th>Cycle</th>
@@ -75,9 +73,7 @@
             <tr>
               <td>{{ activity.cycle }}</td>
               <td>
-                <p-tag 
-                  [value]="activity.type" 
-                  [severity]="activity.type === 'Restock' ? 'success' : 'danger'">
+                <p-tag [value]="activity.type" [severity]="activity.type === 'Restock' ? 'success' : 'danger'">
                 </p-tag>
               </td>
               <td>{{ activity.change }}</td>
