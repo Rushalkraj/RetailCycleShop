@@ -13,6 +13,7 @@ import { map } from 'rxjs/operators';
 })
 export class OrderDetailsComponent implements OnInit {
   order: Order | null = null;
+  
 
   constructor(
     private route: ActivatedRoute,

@@ -49,7 +49,7 @@ export interface OrderItem {
   taxRate?: number;
   totalPrice?: number;
   createdAt?: string;
-  cycle?: { 
+  cycle?: {
     brand?: string;
     model?: string;
   };
@@ -58,12 +58,13 @@ export interface OrderItem {
 
 export interface OrderCreateDto {
   customerId: number;
-  shippingAddressId: number; 
+  shippingAddressId: number;
   subtotal: number;
   tax: number;
   totalAmount: number;
   paymentMethod: string;
   items: OrderItem[];
+  employeeId?: number;
 }
 // export interface Customer {
 //   customerId: number;

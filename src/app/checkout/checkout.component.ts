@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Customer, CustomerCreateDto, CustomerUpdateDto } from '../models/customer.model';
 import { OrderCreateDto } from '../models/order.model';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-checkout',
@@ -35,7 +36,8 @@ export class CheckoutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService
   ) {
     this.checkoutForm = this.fb.group({
       customerId: ['', Validators.required],
@@ -282,7 +284,8 @@ export class CheckoutComponent implements OnInit {
       cartItems: this.cartItems,
       subtotal: this.getSubtotal(),
       tax: this.getTax(),
-      totalAmount: this.getTotal()
+      totalAmount: this.getTotal(),
+      employeeId: this.authService.getEmployeeId()
     };
 
     // Log the order data before navigation

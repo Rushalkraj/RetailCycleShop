@@ -104,6 +104,8 @@ export class PaymentComponent {
       next: (createdOrder) => {
         this.paymentProcessing = false;
         this.toastr.success('Payment processed successfully', 'Success');
+        console.log('order detais', createdOrder);
+        
         this.router.navigate(['/admin/order-confirmation'], {
           state: {
             order: createdOrder,

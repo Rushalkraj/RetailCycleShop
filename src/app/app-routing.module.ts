@@ -1,4 +1,4 @@
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 import { NgModule } from '@angular/core';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -26,6 +26,8 @@ import { InventoryHistoryComponent } from './inventory/inventory-history/invento
 import { ProfileComponent } from './profile/profile.component';
 import { PaymentComponent } from './payment/payment.component';
 import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 
 const routes: Routes = [
@@ -89,8 +91,11 @@ const routes: Routes = [
 
 
 
-  { path: 'forgot-password', component: ForgotPasswordComponent },
+
   { path: 'register', component: RegisterComponent },
+  {path: 'forgot-password', component: ForgotPasswordComponent},
+  {path: 'reset-password', component: ResetPasswordComponent},
+  // {path:'reset-password/:token', component: ResetPasswordComponent},
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'shop', component: InventoryListComponent },

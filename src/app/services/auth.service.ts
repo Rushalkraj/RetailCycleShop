@@ -49,13 +49,22 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (token) {
       const decoded = this.jwtHelper.decodeToken(token);
-      console.log('Decoded token:', decoded); 
+      console.log('Decoded token:', decoded);
       return decoded['customerId'] || decoded['nameidentifier'] || null;
     }
     return null;
   }
-  
-  
+
+  getEmployeeId(): number | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = this.jwtHelper.decodeToken(token);
+      return decoded['employeeId'] || null;
+    }
+    return null;
+  }
+
+
 
   isAdmin(): boolean {
     return this.getUserRole() === 'Admin';
@@ -80,10 +89,10 @@ export class AuthService {
   setRedirectUrl(url: string) {
     this.redirectUrl = url;
   }
-  
+
   getRedirectUrl(): string | null {
     const temp = this.redirectUrl;
-    this.redirectUrl = null; 
+    this.redirectUrl = null;
     return temp;
   }
   adminCreateUser(userData: any): Observable<any> {
@@ -102,6 +111,17 @@ export class AuthService {
   setupPassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/setup-password`, data);
   }
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
 
- 
+  resetPassword(email: string, token: string, newPassword: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, {
+      email,
+      token,
+      newPassword
+    });
+  }
+
+
 }

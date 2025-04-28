@@ -2,7 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { InventoryListComponent } from './inventory/inventory-list/inventory-list.component';
@@ -59,6 +59,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PaymentComponent } from './payment/payment.component';
 import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -67,7 +70,7 @@ import { OrderDetailsComponent } from './orders/order-details/order-details.comp
     LoginComponent,
     InventoryListComponent,
     OrderListComponent,
-    ForgotPasswordComponent,
+    
 
     CycleAddComponent,
     DashboardComponent,
@@ -83,7 +86,11 @@ import { OrderDetailsComponent } from './orders/order-details/order-details.comp
     EmployeeEditDialogComponent,
     PaymentComponent,
     OrderConfirmationComponent,
-    OrderDetailsComponent
+    OrderDetailsComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    
+   
   ],
   imports: [
     BrowserModule,

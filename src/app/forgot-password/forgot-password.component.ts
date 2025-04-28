@@ -1,31 +1,47 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss']
 })
-export class ForgotPasswordComponent implements OnInit {
-  forgotPasswordForm: FormGroup;
-  message: string = '';
+export class ForgotPasswordComponent {
+  forgotForm: FormGroup;
+  loading = false;
+  success = false;
+  error: string | null = null;
 
-  constructor(private fb: FormBuilder) {
-    this.forgotPasswordForm = this.fb.group({
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  ngOnInit(): void {
-  }
-
   onSubmit() {
-    if (this.forgotPasswordForm.valid) {
-      // TODO: Implement password reset logic here
-      console.log('Email:', this.forgotPasswordForm.value.email);
-      this.message = 'A password reset link has been sent to your email address.';
-    } else {
-      this.message = 'Please enter a valid email address.';
+    if (this.forgotForm.invalid) {
+      return;
     }
+
+    this.loading = true;
+    this.error = null;
+
+    this.authService.forgotPassword(this.forgotForm.value.email)
+      .subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'An error occurred. Please try again.';
+          this.loading = false;
+        }
+      });
   }
 }
