@@ -1,4 +1,6 @@
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NgModule } from '@angular/core';
+import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { InventoryListComponent } from './inventory/inventory-list/inventory-list.component';
@@ -37,6 +39,7 @@ const routes: Routes = [
       { path: 'inventory', component: InventoryListComponent },
 
       { path: 'orders', component: OrderListComponent },
+      { path: 'orders/details/:id', component: OrderDetailsComponent },
       { path: 'cycles/add', component: CycleAddComponent },
       { path: 'cycles/edit/:id', component: CycleAddComponent },
       { path: 'checkout', component: CheckoutComponent },
@@ -64,6 +67,7 @@ const routes: Routes = [
       { path: 'inventory', component: InventoryListComponent },
 
       { path: 'orders', component: OrderListComponent },
+      { path: 'orders/details/:id', component: OrderDetailsComponent },
       { path: 'cycles/add', component: CycleAddComponent },
       { path: 'cycles/edit/:id', component: CycleAddComponent },
       { path: 'checkout', component: CheckoutComponent },
@@ -85,6 +89,7 @@ const routes: Routes = [
 
 
 
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'register', component: RegisterComponent },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },

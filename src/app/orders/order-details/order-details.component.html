@@ -1,0 +1,31 @@
+<div class="container mt-4">
+  <div *ngIf="order">
+    <h2>Order Details</h2>
+    <p><strong>Order Number:</strong> {{ order.orderNumber }}</p>
+    <p><strong>Order Date:</strong> {{ order.orderDate | date: 'mediumDate' }}</p>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p *ngIf="order.customer"><strong>Customer:</strong> {{ order.customer.firstName }} {{ order.customer.lastName }}</p>
+    <p><strong>Total Amount:</strong> {{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</p>
+
+    <h3>Order Items:</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.orderItems">
+          <td>{{ item.cycle?.brand }} {{ item.cycle?.model }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.unitPrice | currency:'INR':'symbol':'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!order">
+    <p>Loading order details...</p>
+  </div>
+</div>

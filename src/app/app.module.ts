@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { InventoryListComponent } from './inventory/inventory-list/inventory-list.component';
@@ -57,6 +58,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PaymentComponent } from './payment/payment.component';
 import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
+import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -65,6 +67,7 @@ import { OrderConfirmationComponent } from './orders/order-confirmation/order-co
     LoginComponent,
     InventoryListComponent,
     OrderListComponent,
+    ForgotPasswordComponent,
 
     CycleAddComponent,
     DashboardComponent,
@@ -79,7 +82,8 @@ import { OrderConfirmationComponent } from './orders/order-confirmation/order-co
     ProfileComponent,
     EmployeeEditDialogComponent,
     PaymentComponent,
-    OrderConfirmationComponent
+    OrderConfirmationComponent,
+    OrderDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -87,21 +91,23 @@ import { OrderConfirmationComponent } from './orders/order-confirmation/order-co
     ReactiveFormsModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    TableModule,
-    ToastModule,
-    ConfirmDialogModule, DropdownModule,
-    ProgressSpinnerModule,
-    CardModule,
-    ButtonModule,
-    ChartModule,
-    TagModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    TableModule,
+    ToastModule,
+    ConfirmDialogModule,
+    DropdownModule,
+    ProgressSpinnerModule,
+    CardModule,
+    ButtonModule,
+    ChartModule,
+    TagModule
   ],
   providers: [
     CurrencyPipe,

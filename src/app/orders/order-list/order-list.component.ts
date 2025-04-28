@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 import { OrderService } from '../../services/order.service';
 import { Order, OrderStatus } from '../../models/order.model';
 import { ToastrService } from 'ngx-toastr';
@@ -40,15 +41,18 @@ availableBrands: any;
 priceRange: any;
 isCustomerView: any;
 cartItemCount: any;
+  userRole: string | null = null;
 
   constructor(
     private orderService: OrderService,
     private toastr: ToastrService,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.userRole = this.authService.getUserRole();
     this.fetchOrders();
   }
 

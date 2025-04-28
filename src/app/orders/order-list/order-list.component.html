@@ -91,12 +91,12 @@
               <td class="fw-bold">{{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</td>
               <td>
                 <div class="d-flex gap-2">
-                  <button class="btn btn-sm btn-outline-primary" 
-                          [routerLink]="['/orders', order.orderId]"
+                  <button class="btn btn-sm btn-outline-primary"
+                          [routerLink]="[userRole === 'Admin' ? '/admin/orders/details' : '/employee/orders/details', order.orderId]"
                           title="View Details">
-                    <i class="bi bi-eye"></i>
+                   <i class="bi bi-eye"></i>
                   </button>
-                  <!-- <button class="btn btn-sm btn-outline-danger" 
+                  <!-- <button class="btn btn-sm btn-outline-danger"
                           (click)="confirmDelete(order)"
                           title="Delete Order">
                     <i class="bi bi-trash"></i>
