@@ -34,7 +34,15 @@ export class CustomerService {
         isDefaultShipping: customerData.shippingAddress.isDefaultShipping,
         isDefaultBilling: customerData.shippingAddress.isDefaultBilling
       }
-    });
+    })
+    .pipe(
+      catchError(error => {
+        if (error.status === 409) {
+          return throwError(() => new Error('A customer with this email already exists. Please use a different email address.'));
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   updateCustomer(id: number, customerData: any): Observable<Customer> {

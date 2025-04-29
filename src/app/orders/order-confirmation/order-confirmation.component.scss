@@ -1,72 +1,164 @@
 .confirmation-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+
+  h2, h3 {
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
   }
-  
-  .confirmation-card {
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
-    overflow: hidden;
+
+  p {
+    margin: 0.25rem 0;
   }
-  
+
   .confirmation-header {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-bottom: 1px solid #dee2e6;
-    
-    h2 {
-      margin: 0;
-      color: #212529;
-    }
-    
-    .order-number {
-      margin: 0.5rem 0 0;
-      color: #6c757d;
-    }
-  }
-  
-  .confirmation-body {
-    padding: 1.5rem;
-    
-    h4 {
-      margin-bottom: 1rem;
-      color: #495057;
-    }
-  }
-  
-  .confirmation-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #dee2e6;
     display: flex;
     justify-content: space-between;
-  }
-  
-  .order-items {
-    margin-top: 2rem;
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      
-      th, td {
-        padding: 0.75rem;
-        text-align: left;
-        border-bottom: 1px solid #dee2e6;
+    align-items: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+
+    .header-content {
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1.8rem;
+        color: #28a745;
+
+        i {
+          font-size: 1.8rem;
+        }
       }
-      
-      th {
-        background-color: #f8f9fa;
+
+      p {
+        font-size: 1rem;
+        color: #555;
+      }
+    }
+
+    .order-number {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #444;
+    }
+  }
+
+  .card {
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+
+    .card-header {
+      background-color: #f7f9fa;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #eee;
+
+      h3 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+    }
+
+    .card-body {
+      padding: 1rem 1.25rem;
+
+      h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
       }
     }
   }
-  
-  @media print {
-    .confirmation-footer {
-      display: none;
+
+  .table {
+    margin: 1rem 0;
+    border-collapse: collapse;
+    width: 100%;
+
+    thead th {
+      background-color: #f1f3f5;
+      text-align: left;
+      padding: 0.75rem;
+      font-weight: 600;
+      border-bottom: 2px solid #dee2e6;
     }
-    
-    .confirmation-container {
-      padding: 0;
+
+    tbody td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    tfoot td {
+      padding: 0.75rem;
+      font-weight: 600;
+    }
+
+    .total-row {
+      font-size: 1.05rem;
+      background-color: #f8f9fa;
+      td {
+        font-weight: 700;
+        color: #2c3e50;
+      }
+    }
+
+    .text-end {
+      text-align: right;
     }
   }
+
+  .confirmation-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+
+    .btn {
+      font-size: 0.95rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-outline-secondary {
+      border: 1px solid #ced4da;
+    }
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .confirmation-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .confirmation-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+}
+
+// Optional: Print styles
+@media print {
+  .confirmation-actions {
+    display: none;
+  }
+
+  .confirmation-container {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+  }
+}

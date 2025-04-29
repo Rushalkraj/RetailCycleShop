@@ -186,7 +186,8 @@ export class CheckoutComponent implements OnInit {
 
         },
         error: (err) => {
-          this.toastr.error('Failed to create customer', 'Error');
+          const errorMessage = err.message || 'Failed to create customer';
+          this.toastr.error(errorMessage, 'Error');
           this.isLoading = false;
         }
       });
@@ -273,6 +274,7 @@ export class CheckoutComponent implements OnInit {
     if (this.isNewCustomer) {
       // For new customers, save them first
       this.saveCustomer();
+      this.isNewCustomer = false;
       return; // saveCustomer will call proceedToPayment again after successful creation
     }
 
