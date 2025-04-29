@@ -16,6 +16,7 @@ export class PaymentComponent {
   orderData: any;
   paymentProcessing = false;
   selectedMethod: PaymentMethod = PaymentMethod.CreditCard;
+  showQRCode = false;
   cardDetails = {
     number: '',
     expiry: '',
@@ -24,10 +25,14 @@ export class PaymentComponent {
 
   paymentMethods = [
     { value: PaymentMethod.CreditCard, label: 'Credit Card', icon: 'credit_card' },
-    { value: PaymentMethod.PayPal, label: 'PayPal', icon: 'paypal' },
+    { value: PaymentMethod.UPI, label: 'UPI', icon: 'qr_code' },
     { value: PaymentMethod.BankTransfer, label: 'Bank Transfer', icon: 'account_balance' },
     { value: PaymentMethod.cashfree, label: 'Cashfree', icon: 'currency_rupee' }
   ];
+
+  toggleQRCode(): void {
+    this.showQRCode = !this.showQRCode;
+  }
 
   constructor(
     private router: Router,
@@ -37,7 +42,7 @@ export class PaymentComponent {
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.orderData = navigation?.extras?.state?.['orderData'];
-    
+
     if (!this.orderData) {
       this.toastr.error('No order data found', 'Error');
       this.router.navigate(['/checkout']);
@@ -55,7 +60,7 @@ export class PaymentComponent {
 
   async processPayment(): Promise<void> {
     if (!this.orderData || !this.isPaymentFormValid()) return;
-  
+
     if (this.selectedMethod === PaymentMethod.cashfree) {
       await this.processCashfreePayment();
       return;
@@ -105,7 +110,7 @@ export class PaymentComponent {
         this.paymentProcessing = false;
         this.toastr.success('Payment processed successfully', 'Success');
         console.log('order detais', createdOrder);
-        
+
         this.router.navigate(['/admin/order-confirmation'], {
           state: {
             order: createdOrder,
@@ -124,13 +129,13 @@ export class PaymentComponent {
 
   private async processCashfreePayment(): Promise<void> {
     this.paymentProcessing = true;
-  
+
     try {
       // Create Cashfree order
       const orderResponse: any = await this.paymentService
         .createCashfreeOrder(this.orderData.orderId, this.orderData.totalAmount)
         .toPromise();
-  
+
       if (orderResponse.payment_link) {
         // Redirect to Cashfree payment page
         this.paymentService.redirectToCashfree(orderResponse.payment_link);

@@ -21,7 +21,7 @@
             >
               <i class="bi" [ngClass]="{
                 'bi-credit-card': method.value === PaymentMethod.CreditCard,
-                'bi-paypal': method.value === PaymentMethod.PayPal,
+              
                 'bi-bank': method.value === PaymentMethod.BankTransfer,
                 'bi-currency-rupee': method.value === PaymentMethod.cashfree
               }"></i>
@@ -59,9 +59,31 @@
             </div>
           </div>
 
-          <!-- PayPal Info -->
-          <div *ngIf="selectedMethod === PaymentMethod.PayPal" class="alert alert-info mt-3">
-            <i class="bi bi-info-circle"></i> You will be redirected to PayPal to complete your payment.
+          <!-- UPI Payment Info -->
+          <div *ngIf="selectedMethod === PaymentMethod.UPI" class="mt-3">
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle"></i> Scan the QR code using any UPI app to make the payment.
+            </div>
+            <div class="text-center">
+              <button class="btn btn-primary" (click)="toggleQRCode()">
+                <i class="bi bi-qr-code"></i> Show QR Code
+              </button>
+            </div>
+            <!-- QR Code Modal -->
+            <div class="qr-modal" *ngIf="showQRCode" (click)="toggleQRCode()">
+              <div class="qr-content" (click)="$event.stopPropagation()">
+                <div class="qr-header">
+                  <h5>Scan QR Code</h5>
+                  <button class="close-btn" (click)="toggleQRCode()">
+                    <i class="bi bi-x"></i>
+                  </button>
+                </div>
+                <div class="qr-body">
+                  <img src="assets/image.png" alt="UPI QR Code" class="qr-image">
+                  <p class="mt-3">Amount: {{ orderData?.totalAmount | currency:'INR' }}</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Bank Transfer Info -->

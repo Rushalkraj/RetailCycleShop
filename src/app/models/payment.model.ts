@@ -13,7 +13,7 @@ export interface Payment {
 
 export enum PaymentMethod {
   CreditCard = 1,
-  PayPal = 2,
+  UPI = 2,
   BankTransfer = 3,
   cashfree = 4
 }
