@@ -96,6 +96,8 @@ export class AuthService {
     return temp;
   }
   adminCreateUser(userData: any): Observable<any> {
+    console.log('Creating user with data:', userData);
+    
     return this.http.post(`${this.apiUrl}/admin-create-user`, userData);
   }
   validateInvitation(email: string): Observable<{ isValid: boolean }> {

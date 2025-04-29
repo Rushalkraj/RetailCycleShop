@@ -126,6 +126,7 @@ cartItemCount: any;
       complete: () => {
         this.toastr.success('Order status updated', 'Success');
         this.applyFilters();
+        this.fetchOrders();
       }
     });
   
