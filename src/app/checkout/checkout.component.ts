@@ -252,6 +252,14 @@ export class CheckoutComponent implements OnInit {
       this.toastr.info('Quantity updated', 'Cart Updated');
     }
   }
+  changeQuantity(item: any, delta: number) {
+    const newQuantity = item.quantity + delta;
+    if (newQuantity >= 1) {
+      item.quantity = newQuantity;
+      this.updateQuantity(item, newQuantity);
+    }
+  }
+  
 
   removeItem(cycleId: number): void {
     this.cartService.removeItem(cycleId);

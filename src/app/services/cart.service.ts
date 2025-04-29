@@ -60,6 +60,7 @@ export class CartService {
     const item = this.cartItems.find(i => i.cycleId === cycleId);
     if (item) {
       item.quantity = quantity;
+      this.saveCart();
     }
   }
 
