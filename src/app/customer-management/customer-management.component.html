@@ -1,63 +1,86 @@
 <div class="customer-management">
-  
-
-  
-    <div class="search-bar mb-4">
-      <input type="text" class="form-control" placeholder="Search customers..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
-    </div>
-  
-
-    <div *ngIf="isLoading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+  <div class="header-section">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>
+          <span class="icon-wrapper">
+            <i class="fas fa-users"></i>
+          </span>
+          Customer Management
+        </h1>
+        <!-- <p class="subtitle">Manage your customer relationships, view detailed profiles, and track customer interactions all in one place.</p> -->
+      </div>
+      <div class="header-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{totalCustomers}}</div>
+          <div class="stat-label">Total Customers</div>
+        </div>
+        <!-- <div class="stat-item">
+          <div class="stat-value">{{activeCustomers}}</div>
+          <div class="stat-label">Active Customers</div>
+        </div> -->
+        <div class="stat-item">
+          <div class="stat-value">{{newCustomers}}</div>
+          <div class="stat-label">New This Month</div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <table *ngIf="!isLoading && customers.length > 0" class="table table-striped">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Address</th>
-          <th>Actions</th>
-         
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let customer of customers">
-          <td>{{customer.firstName}} {{customer.lastName}}</td>
-          <td>{{customer.email}}</td>
-          <td>{{customer.phone}}</td>
-          <td>
-            <div *ngIf="customer.shippingAddress">
-              {{ customer.shippingAddress.streetLine1 }},
-              <span *ngIf="customer.shippingAddress.streetLine2">{{ customer.shippingAddress.streetLine2 }}, </span>
-              {{ customer.shippingAddress.city }},
-              {{ customer.shippingAddress.state }},
-              {{ customer.shippingAddress.postalCode }},
-              {{ customer.shippingAddress.country }}
-            </div>
-            <div *ngIf="!customer.shippingAddress">
-              <em>No Address</em>
-            </div>
-          </td>
-          
-          <td>
-            <div class="btn-group">
-            <button class="btn btn-sm btn-outline-primary"  (click)="navigateToEditCustomer(customer.customerId)">
-              <i class="bi bi-pencil"></i> 
-            </button>
-            <button *ngIf="userRole=='Admin'" class="btn btn-sm btn-outline-danger"  (click)="deleteCustomer(customer.customerId)">
-              <i class="bi bi-trash"></i> 
-            </button>
-            
-          </div>
-        </tr>
-      </tbody>
-      
-    </table>
-    <div *ngIf="!isLoading && customers.length === 0" class="alert alert-info" role="alert">
-      No customers found.
+  <div class="search-bar mb-4">
+    <input type="text" class="form-control" placeholder="Search customers..." [(ngModel)]="searchTerm" (input)="searchCustomers()">
+  </div>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
+
+  <table *ngIf="!isLoading && customers.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let customer of customers">
+        <td data-label="Name">{{customer.firstName}} {{customer.lastName}}</td>
+        <td data-label="Email">{{customer.email}}</td>
+        <td data-label="Phone">{{customer.phone}}</td>
+        <td data-label="Address">
+          <div *ngIf="customer.shippingAddress">
+            {{ customer.shippingAddress.streetLine1 }},
+            <span *ngIf="customer.shippingAddress.streetLine2">{{ customer.shippingAddress.streetLine2 }}, </span>
+            {{ customer.shippingAddress.city }},
+            {{ customer.shippingAddress.state }},
+            {{ customer.shippingAddress.postalCode }},
+            {{ customer.shippingAddress.country }}
+          </div>
+          <div *ngIf="!customer.shippingAddress">
+            <em>No Address</em>
+          </div>
+        </td>
+        
+        <td data-label="Actions">
+          <div class="btn-group">
+          <button class="btn btn-sm btn-outline-primary"  (click)="navigateToEditCustomer(customer.customerId)">
+            <i class="bi bi-pencil"></i> 
+          </button>
+          <button *ngIf="userRole=='Admin'" class="btn btn-sm btn-outline-danger"  (click)="deleteCustomer(customer.customerId)">
+            <i class="bi bi-trash"></i> 
+          </button>
+          
+        </div>
+      </tr>
+    </tbody>
+    
+  </table>
+  <div *ngIf="!isLoading && customers.length === 0" class="alert alert-info" role="alert">
+    No customers found.
+  </div>
+</div>

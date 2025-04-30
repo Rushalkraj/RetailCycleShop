@@ -2,16 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { InventoryHistoryService } from '../../services/inventory-history.service';
 import { MessageService } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'primeng/tooltip';
+import { DropdownModule } from 'primeng/dropdown';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ChartModule } from 'primeng/chart';
 
 interface InventorySummary {
   criticalStock: number;
-
   lowStock: number;
   outOfStock: number;
   recentActivity: any[];
   weeklyChanges: any[];
-  
-  
+  totalOrders: number;
 }
 
 @Component({
@@ -33,8 +41,8 @@ export class InventoryHistoryComponent implements OnInit {
   constructor(
     private inventoryService: InventoryHistoryService,
     private messageService: MessageService,
-    private  authService: AuthService,
-  ) {}
+    private authService: AuthService,
+  ) { }
 
   ngOnInit(): void {
     this.loadSummary();

@@ -20,6 +20,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease-in-out;
     
+    
     &:hover {
       transform: translateY(-2px);
     }
@@ -28,6 +29,7 @@
       border-radius: 10px 10px 0 0 !important;
       background-color: #f8f9fa;
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      background: linear-gradient(135deg, rgba(168, 192, 255, 0.9) 0%, rgba(63, 43, 150, 0.9) 100%);
       
       .bi-eye {
         font-size: 1.2rem;
@@ -92,12 +94,86 @@
   }
   
   .pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
     .page-item {
+      margin: 0;
+      padding: 0;
       cursor: pointer;
-      
-      &.active .page-link {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
+      transition: all 0.3s ease;
+
+      &:first-child,
+      &:last-child {
+        .page-link {
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          background: rgba(13, 110, 253, 0.1);
+          color: #0d6efd;
+          border: 1px solid rgba(13, 110, 253, 0.2);
+          
+          &:hover {
+            background: rgba(13, 110, 253, 0.2);
+            border-color: rgba(13, 110, 253, 0.3);
+          }
+        }
+      }
+
+      &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        
+        .page-link {
+          pointer-events: none;
+          background: rgba(13, 110, 253, 0.05);
+          color: rgba(13, 110, 253, 0.5);
+        }
+      }
+
+      .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0.5rem;
+        border-radius: 8px;
+        background: transparent;
+        color: #64748b;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+
+        &:hover {
+          background: rgba(13, 110, 253, 0.1);
+          color: #0d6efd;
+          border-color: rgba(13, 110, 253, 0.2);
+          transform: translateY(-1px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      &.active {
+        .page-link {
+          background: #0d6efd;
+          color: white;
+          border-color: #0d6efd;
+          box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+          
+          &:hover {
+            background: #0b5ed7;
+            border-color: #0a58ca;
+          }
+        }
       }
     }
   }
@@ -133,6 +209,20 @@
     .orders-grid {
       .order-card {
         margin-bottom: 1rem;
+      }
+    }
+    .pagination {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.25rem;
+      
+      .page-item {
+        .page-link {
+          min-width: 32px;
+          height: 32px;
+          padding: 0.25rem;
+          font-size: 0.75rem;
+        }
       }
     }
   }

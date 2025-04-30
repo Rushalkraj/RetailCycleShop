@@ -1,50 +1,81 @@
 <div class="admin-create-user-container">
-    <h2>Create New User</h2>
-    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" formControlName="fullName" required>
+  <h2>
+    <i class="pi pi-user-plus"></i>
+    Create New User
+  </h2>
+
+  <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+    <div class="form-row">
+      <div class="form-group required">
+        <label for="fullName">Full Name</label>
+        <input 
+          id="fullName"
+          type="text"
+          formControlName="fullName"
+          placeholder="Enter full name"
+          [class.error]="createUserForm.get('fullName')?.invalid && createUserForm.get('fullName')?.touched">
       </div>
-  
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" formControlName="email" required>
+
+      <div class="form-group required">
+        <label for="email">Email Address</label>
+        <input 
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email address"
+          [class.error]="createUserForm.get('email')?.invalid && createUserForm.get('email')?.touched">
       </div>
-      <div class="form-group">
-        <label>address</label>
-        <input type="address" formControlName="address" required>
-      </div>
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input type="text" formControlName="phoneNumber" required>
-      </div>
-  
-      <div class="form-group">
-        <label>Role</label>
-        <select formControlName="role" required>
-          <option value="Admin">Admin</option>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group required">
+        <label for="role">Role</label>
+        <select 
+          id="role"
+          formControlName="role"
+          [class.error]="createUserForm.get('role')?.invalid && createUserForm.get('role')?.touched">
           <option value="Employee">Employee</option>
+          <option value="Admin">Admin</option>
         </select>
       </div>
-  
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input 
+          id="phoneNumber"
+          type="tel"
+          formControlName="phoneNumber"
+          placeholder="Enter phone number">
       </div>
-  
-      <div *ngIf="successMessage" class="success-message">
-        {{ successMessage }}
-      </div>
-  
-      <div *ngIf="successMessage" class="success-message">
-        {{ successMessage }}
-        <!-- <button type="button" class="btn-copy" (click)="copyToClipboard()">
-          <i class="bi bi-clipboard"></i> Copy
-        </button> -->
-      </div>
-  
-      <button type="submit" [disabled]="createUserForm.invalid || isLoading">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm"></span>
-        {{ isLoading ? 'Creating...' : 'Create User' }}
-      </button>
-    </form>
-  </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <input 
+        id="address"
+        type="text"
+        formControlName="address"
+        placeholder="Enter address">
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      <i class="pi pi-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="successMessage" class="success-message">
+      <i class="pi pi-check-circle"></i>
+      {{ successMessage }}
+    </div>
+
+    <button 
+      type="submit" 
+      [disabled]="createUserForm.invalid || isLoading">
+      <ng-container *ngIf="!isLoading">
+        <i class="pi pi-user-plus"></i>
+        Create User
+      </ng-container>
+      <div *ngIf="isLoading" class="loading-spinner"></div>
+    </button>
+  </form>
+</div>

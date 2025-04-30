@@ -50,6 +50,7 @@ export interface OrderItem {
   totalPrice?: number;
   createdAt?: string;
   cycle?: {
+    cycleId: number;
     brand?: string;
     model?: string;
   };

@@ -1,6 +1,6 @@
 // components/profile/profile.component.scss
 .profile-container {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
     background: #f9f9f9;
@@ -13,8 +13,166 @@
       color: #333;
     }
   }
-  
-  .form-group {
+
+
+.profile-section {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.orders-section {
+  h2 {
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #333;
+  }
+
+  .orders-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .order-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #eee;
+
+      .order-info {
+        .order-number {
+          font-weight: 600;
+          color: #2c3e50;
+          margin-right: 1rem;
+        }
+
+        .order-date {
+          color: #7f8c8d;
+        }
+      }
+    }
+
+    .order-details {
+      padding: 1.5rem;
+
+      .order-items {
+        margin-bottom: 1.5rem;
+
+        .item {
+          display: flex;
+          align-items: center;
+          padding: 1rem 0;
+          border-bottom: 1px solid #eee;
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1rem;
+          }
+
+          .item-info {
+            h4 {
+              margin: 0 0 0.5rem;
+              color: #2c3e50;
+            }
+
+            .item-price {
+              color: #e74c3c;
+              font-weight: 600;
+              margin: 0 0 0.25rem;
+            }
+
+            .item-quantity {
+              color: #7f8c8d;
+              margin: 0;
+            }
+          }
+        }
+      }
+
+      .order-summary {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+
+        .summary-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.5rem 0;
+
+          &.total {
+            border-top: 1px solid #eee;
+            margin-top: 0.5rem;
+            padding-top: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+          }
+        }
+      }
+    }
+  }
+
+  .no-orders {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    i {
+      font-size: 3rem;
+      color: #bdc3c7;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #7f8c8d;
+      margin: 0;
+    }
+  }
+}
+
+.status-indicator {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+
+  &.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  &.status-processing {
+    background-color: #cce5ff;
+    color: #004085;
+  }
+
+  &.status-completed {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+.form-group {
     margin-bottom: 1.25rem;
   
     label {

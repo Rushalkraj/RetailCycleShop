@@ -1,31 +1,102 @@
-<div class="container mt-4">
-  <div *ngIf="order">
-    <h2>Order Details</h2>
-    <p><strong>Order Number:</strong> {{ order.orderNumber }}</p>
-    <p><strong>Order Date:</strong> {{ order.orderDate | date: 'mediumDate' }}</p>
-    <p><strong>Status:</strong> {{ order.status }}</p>
-    <p *ngIf="order.customer"><strong>Customer:</strong> {{ order.customer.firstName }} {{ order.customer.lastName }}</p>
-    <p><strong>Total Amount:</strong> {{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</p>
+<div class="order-details-container">
+  <div class="order-details-card" *ngIf="order && !loading">
+    <!-- Header Section -->
+    <div class="order-header">
+      <div class="order-title">
+        <h1>Order Details</h1>
+        <span class="order-number">#{{ order.orderNumber }}</span>
+      </div>
+      <div class="order-status" [ngClass]="getStatusClass(order.status.toString())">
+        {{ order.status }}
+      </div>
+    </div>
 
-    <h3>Order Items:</h3>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of order.orderItems">
-          <td>{{ item.cycle?.brand }} {{ item.cycle?.model }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ item.unitPrice | currency:'INR':'symbol':'1.2-2' }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Order Summary -->
+    <div class="order-summary">
+      <div class="summary-card">
+        <div class="summary-icon">
+          <i class="bi bi-calendar"></i>
+        </div>
+        <div class="summary-content">
+          <span class="summary-label">Order Date</span>
+          <span class="summary-value">{{ order.orderDate | date: 'mediumDate' }}</span>
+        </div>
+      </div>
+      <!-- <div class="summary-card">
+        <div class="summary-icon">
+          <i class="bi bi-person"></i>
+        </div>
+        <div class="summary-content">
+          <span class="summary-label">Customer</span>
+          <span class="summary-value" *ngIf="order.customer">
+            {{ order.customer.firstName }} {{ order.customer.lastName }}
+          </span>
+          <span class="summary-value" *ngIf="!order.customer">N/A</span>
+        </div>
+      </div> -->
+      <div class="summary-card">
+        <div class="summary-icon">
+          <i class="bi bi-currency-rupee"></i>
+        </div>
+        <div class="summary-content">
+          <span class="summary-label">Total Amount</span>
+          <span class="summary-value">{{ order.totalAmount | currency:'INR':'symbol':'1.2-2' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="order-items">
+      <h2>Order Items</h2>
+      <div class="items-table">
+        <div class="table-header">
+          <div class="col product">Product</div>
+          <div class="col quantity">Quantity</div>
+          <div class="col price">Price</div>
+          <div class="col total">Total</div>
+        </div>
+        <div class="table-body">
+          <div class="table-row" *ngFor="let item of order.orderItems">
+            <div class="col product">
+              <div class="product-info">
+                <div class="product-name">{{ item.cycle?.brand }} {{ item.cycle?.model }}</div>
+                <div class="product-id" *ngIf="item.cycle?.cycleId">ID: {{ item.cycle?.cycleId }}</div>
+              </div>
+            </div>
+            <div class="col quantity">{{ item.quantity }}</div>
+            <div class="col price">{{ item.unitPrice | currency:'INR':'symbol':'1.2-2' }}</div>
+            <div class="col total">{{ item.quantity * item.unitPrice | currency:'INR':'symbol':'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Actions -->
+    <div class="order-actions">
+      <button class="action-button print" (click)="printOrder()">
+        <i class="bi bi-printer"></i>
+        Print Order
+      </button>
+      <button class="action-button back" (click)="goBack()">
+        <i class="bi bi-arrow-left"></i>
+        Back to Orders
+      </button>
+    </div>
   </div>
-  <div *ngIf="!order">
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="loading-spinner"></div>
     <p>Loading order details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="!order && !loading">
+    <i class="bi bi-exclamation-circle"></i>
+    <p>Order not found</p>
+    <button class="action-button back" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i>
+      Back to Orders
+    </button>
   </div>
 </div>

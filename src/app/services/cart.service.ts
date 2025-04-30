@@ -30,19 +30,15 @@ export class CartService {
     }
   }
 
-  private saveCart(): void {
+  saveCart(): void {
     localStorage.setItem('cart', JSON.stringify(this.cartItems));
     this.cartSubject.next(this.cartItems);
   }
-
- 
 
   getItemCount(): number {
     return this.cartItems.reduce((total, item) => total + item.quantity, 0);
   }
 
-
- 
   getItems() {
     return this.cartItems;
   }
@@ -52,8 +48,9 @@ export class CartService {
     if (existingItem) {
       existingItem.quantity++;
     } else {
-      this.cartItems.push({...item, quantity: 1});
+      this.cartItems.push({ ...item, quantity: 1 });
     }
+    this.saveCart();
   }
 
   updateQuantity(cycleId: number, quantity: number) {
@@ -68,7 +65,7 @@ export class CartService {
     const userRole = this.authService.getUserRole();
     if (userRole === 'Admin') {
       this.cartItems = this.cartItems.filter(item => item.cycleId !== cycleId);
-      this.saveCart(); // Save the cart after removing the item
+      this.saveCart();
     } else {
       alert('You do not have permission to remove items from the cart.');
     }
@@ -76,6 +73,7 @@ export class CartService {
 
   clearCart() {
     this.cartItems = [];
+    this.saveCart();
   }
 
   getTotalItems() {
@@ -85,7 +83,8 @@ export class CartService {
   getSubtotal(): number {
     return this.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
+
   getTotal(): number {
-    return this.getSubtotal(); 
+    return this.getSubtotal();
   }
 }

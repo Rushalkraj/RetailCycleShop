@@ -57,7 +57,7 @@
                 </div>
               </td>
             </tr>
-            <tr *ngFor="let order of filteredOrders" class="order-row">
+            <tr *ngFor="let order of paginatedOrders" class="order-row">
               <td class="fw-semibold">
                 <a [routerLink]="['/orders', order.orderId]" class="text-decoration-none">
                   {{ order.orderNumber }}
@@ -115,18 +115,22 @@
 
       <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="filteredOrders.length > 0">
         <div class="text-muted">
-          Showing {{ filteredOrders.length }} of {{ orders.length }} orders
+          Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to {{ Math.min(currentPage * itemsPerPage, totalItems) }} of {{ totalItems }} orders
         </div>
         <nav>
           <ul class="pagination mb-0">
             <li class="page-item" [class.disabled]="currentPage === 1">
-              <a class="page-link" (click)="prevPage()">Previous</a>
+              <a class="page-link" (click)="prevPage()" [class.disabled]="currentPage === 1">
+                <i class="bi bi-chevron-left"></i>
+              </a>
             </li>
             <li class="page-item" *ngFor="let page of visiblePages" [class.active]="page === currentPage">
               <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
             </li>
             <li class="page-item" [class.disabled]="currentPage === totalPages">
-              <a class="page-link" (click)="nextPage()">Next</a>
+              <a class="page-link" (click)="nextPage()" [class.disabled]="currentPage === totalPages">
+                <i class="bi bi-chevron-right"></i>
+              </a>
             </li>
           </ul>
         </nav>

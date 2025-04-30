@@ -1,58 +1,141 @@
 <!-- components/employee-list/employee-list.component.html -->
 <div class="employee-container">
-  <p-toast></p-toast>
-  <p-confirmDialog></p-confirmDialog>
+  <p-toast position="top-right"></p-toast>
+  <p-confirmDialog header="Confirm Deletion" icon="pi pi-exclamation-triangle"></p-confirmDialog>
   
   <div class="header">
     <h2>
-      <i class="pi pi-users"></i> Employee Management
+      <i class="pi pi-users"></i>
+      Employee Management
     </h2>
-    <p>Manage your shop staff efficiently</p>
+    <p>Manage your shop staff efficiently and securely</p>
   </div>
-  <div class="search-bar mb-4">
-    <input type="text" class="form-control" placeholder="Search employees..." [(ngModel)]="searchTerm" (input)="searchEmployees()">
+
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (input)="searchEmployees()"
+      placeholder="Search by name or email..."
+      pTooltip="Type to search employees"
+      tooltipPosition="bottom">
   </div>
 
   <p-table
     [value]="displayedEmployees"
     [loading]="loading"
-    styleClass="p-datatable-striped"
     [paginator]="true"
     [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} employees"
+    [rowsPerPageOptions]="[10,25,50]"
+    styleClass="p-datatable-employees"
+    [filterDelay]="0"
+    [globalFilterFields]="['fullName','email']"
+    [scrollable]="true"
+    scrollHeight="400px"
   >
     <ng-template pTemplate="header">
       <tr>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Joined On</th>
-        <th>Actions</th>
+        <th pSortableColumn="fullName">
+          <div class="column-header">
+            <i class="pi pi-user"></i>
+            <span>Full Name</span>
+            <p-sortIcon field="fullName"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="email">
+          <div class="column-header">
+            <i class="pi pi-envelope"></i>
+            <span>Email</span>
+            <p-sortIcon field="email"></p-sortIcon>
+          </div>
+        </th>
+        <th pSortableColumn="createdDate">
+          <div class="column-header">
+            <i class="pi pi-calendar"></i>
+            <span>Joined On</span>
+            <p-sortIcon field="createdDate"></p-sortIcon>
+          </div>
+        </th>
+        <th style="width: 120px">
+          <div class="column-header">
+            <i class="pi pi-cog"></i>
+            <span>Actions</span>
+          </div>
+        </th>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-employee>
       <tr>
-        <td>{{ employee.fullName }}</td>
-        <td>{{ employee.email }}</td>
-        <td>{{ employee.createdDate | date: 'mediumDate' }}</td>
         <td>
-          <button
-            pButton
-            icon="pi pi-pencil"
-             class="btn btn-sm btn-outline-primary"
-            (click)="openEditDialog(employee)"
-          ></button>
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="btn btn-sm btn-outline-danger" 
-            (click)="confirmDelete(employee)"
-          ></button>
+          <div class="employee-name">
+            <i class="pi pi-user"></i>
+            <span>{{ employee.fullName }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="employee-email">
+            <i class="pi pi-envelope"></i>
+            <span>{{ employee.email }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="join-date">
+            <i class="pi pi-calendar"></i>
+            <span>{{ employee.createdDate | date: 'mediumDate' }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button 
+              class="edit-button" 
+              (click)="openEditDialog(employee)"
+              pTooltip="Edit Employee"
+              tooltipPosition="top">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button 
+              class="delete-button"
+              (click)="confirmDelete(employee)"
+              pTooltip="Delete Employee"
+              tooltipPosition="top">
+              <i class="pi pi-trash"></i>
+            </button>
+          </div>
         </td>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4">No employees found</td>
+        <td colspan="4" class="text-center p-4">
+          <div class="empty-message">
+            <i class="pi pi-search"></i>
+            <p>No employees found</p>
+            <small class="hint">Try adjusting your search criteria</small>
+          </div>
+        </td>
       </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+      <tr>
+        <td colspan="4" class="text-center p-4">
+          <div class="loading-message">
+            <i class="pi pi-spin pi-spinner"></i>
+            <p>Loading employees</p>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="paginatorleft">
+      <p-button icon="pi pi-refresh" styleClass="p-button-text" (click)="loadEmployees()" pTooltip="Refresh list" tooltipPosition="top"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+      <!-- <p-button icon="pi pi-cloud" styleClass="p-button-text" pTooltip="Sync with cloud" tooltipPosition="top"></p-button> -->
     </ng-template>
   </p-table>
 </div>

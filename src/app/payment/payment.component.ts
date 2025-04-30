@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { OrderCreateDto } from '../models/order.model';
 import { PaymentMethod } from '../models/payment.model';
 import { PaymentService } from '../services/payment.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-payment',
@@ -38,7 +39,8 @@ export class PaymentComponent {
     private router: Router,
     private orderService: OrderService,
     private toastr: ToastrService,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private cartService: CartService
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.orderData = navigation?.extras?.state?.['orderData'];
@@ -109,7 +111,11 @@ export class PaymentComponent {
       next: (createdOrder) => {
         this.paymentProcessing = false;
         this.toastr.success('Payment processed successfully', 'Success');
-        console.log('order detais', createdOrder);
+        console.log('order details', createdOrder);
+
+        // Clear the cart after successful order
+        this.cartService.clearCart();
+        this.cartService.saveCart(); // Save the empty cart to localStorage
 
         this.router.navigate(['/admin/order-confirmation'], {
           state: {

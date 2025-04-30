@@ -18,6 +18,9 @@ export class OrderListComponent implements OnInit {
   searchTerm: string = '';
   currentPage = 1;
   itemsPerPage = 10;
+  totalItems = 0;
+  totalPages = 0;
+  visiblePages: number[] = [];
   activeFilter: number | null = null;
 
   statusOptions = [
@@ -34,14 +37,16 @@ export class OrderListComponent implements OnInit {
     { value: OrderStatus.Completed, label: 'Completed' },
     { value: OrderStatus.Cancelled, label: 'Cancelled' }
   ];
-selectedType: any;
-availableTypes: any;
-selectedBrand: any;
-availableBrands: any;
-priceRange: any;
-isCustomerView: any;
-cartItemCount: any;
+  selectedType: any;
+  availableTypes: any;
+  selectedBrand: any;
+  availableBrands: any;
+  priceRange: any;
+  isCustomerView: any;
+  cartItemCount: any;
   userRole: string | null = null;
+
+  Math = Math;
 
   constructor(
     private orderService: OrderService,
@@ -100,7 +105,52 @@ cartItemCount: any;
     }
 
     this.filteredOrders = result;
+    this.totalItems = result.length;
+    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    this.updateVisiblePages();
     this.currentPage = 1;
+  }
+
+  get paginatedOrders(): Order[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredOrders.slice(startIndex, endIndex);
+  }
+
+  updateVisiblePages(): void {
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    this.visiblePages = [];
+    for (let i = start; i <= end; i++) {
+      this.visiblePages.push(i);
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateVisiblePages();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateVisiblePages();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updateVisiblePages();
+    }
   }
 
   getStatusClass(status: number): string {
@@ -129,22 +179,16 @@ cartItemCount: any;
         this.fetchOrders();
       }
     });
-  
   }
 
   confirmDelete(order: Order): void {
-
-
     this.confirmationService.confirm({
       message: `Are you sure you want to delete order ${order.orderNumber}? This action cannot be undone.`,
-
       header: 'Confirm Deletion',
       icon: 'pi pi-exclamation-triangle',
       accept: () => this.deleteOrder(order)
     });
-
   }
-
 
   deleteOrder(order: Order): void {
     this.loading = true;
@@ -159,45 +203,5 @@ cartItemCount: any;
         this.loading = false;
       }
     });
-  }
-
-  // Pagination methods remain the same
-  get totalPages(): number {
-    return Math.ceil(this.filteredOrders.length / this.itemsPerPage);
-  }
-
-  get visiblePages(): number[] {
-    const pages: number[] = [];
-    const maxVisible = 5;
-    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
-    let end = Math.min(this.totalPages, start + maxVisible - 1);
-
-    if (end - start + 1 < maxVisible) {
-      start = Math.max(1, end - maxVisible + 1);
-    }
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-
-    return pages;
-  }
-
-  goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
   }
 }

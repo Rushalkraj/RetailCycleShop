@@ -11,6 +11,7 @@ export interface Customer {
   shippingAddressId?: number;
   createdAt: string;
   updatedAt: string;
+  lastPurchaseDate?: Date;
 
   billingAddress?: Address;
   shippingAddress?: Address;

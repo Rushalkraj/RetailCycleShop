@@ -18,14 +18,9 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { RegisterComponent } from './register/register.component';
 
-
-import { InventoryHistoryComponent } from './inventory/inventory-history/inventory-history.component';
-
-
 import { CheckoutComponent } from './checkout/checkout.component';
 import { CustomerManagementComponent } from './customer-management/customer-management.component';
 import { CustomerEditComponent } from './customer-edit/customer-edit.component';
-
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -42,7 +37,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
-
 import { TagModule } from 'primeng/tag';
 import { ProfileComponent } from './profile/profile.component';
 import { EmployeeEditDialogComponent } from './employee-edit-dialog/employee-edit-dialog.component';
@@ -52,16 +46,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
-
-
-
 import { PaymentComponent } from './payment/payment.component';
 import { OrderConfirmationComponent } from './orders/order-confirmation/order-confirmation.component';
 import { OrderDetailsComponent } from './orders/order-details/order-details.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
-
+import { InventoryModule } from './inventory/inventory.module';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -70,12 +60,9 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     LoginComponent,
     InventoryListComponent,
     OrderListComponent,
-    
-
     CycleAddComponent,
     DashboardComponent,
     RegisterComponent,
-    InventoryHistoryComponent,
     CheckoutComponent,
     CustomerManagementComponent,
     CustomerEditComponent,
@@ -88,9 +75,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     OrderConfirmationComponent,
     OrderDetailsComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent,
-    
-   
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -114,7 +99,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     CardModule,
     ButtonModule,
     ChartModule,
-    TagModule
+    TagModule,
+    InventoryModule
   ],
   providers: [
     CurrencyPipe,
@@ -122,8 +108,6 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     ConfirmationService,
     MessageService
   ],
-
-
   bootstrap: [AppComponent]
 })
 export class AppModule { }

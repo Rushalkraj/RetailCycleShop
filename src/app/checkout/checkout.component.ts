@@ -41,15 +41,15 @@ export class CheckoutComponent implements OnInit {
   ) {
     this.checkoutForm = this.fb.group({
       customerId: ['', Validators.required],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
-      streetLine1: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      streetLine1: ['', [Validators.required, Validators.minLength(5)]],
       streetLine2: [''],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      postalCode: ['', Validators.required],
+      city: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.minLength(2)]],
+      state: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.minLength(2)]],
+      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
       country: ['India', Validators.required],
       paymentMethod: ['CREDIT_CARD', Validators.required],
       saveShipping: [true],
@@ -149,7 +149,47 @@ export class CheckoutComponent implements OnInit {
 
   saveCustomer(): void {
     if (this.checkoutForm.invalid) {
-      this.toastr.warning('Please fill all required fields', 'Validation Error');
+      const controls = this.checkoutForm.controls;
+      let errorMessage = 'Please correct the following errors:\n';
+
+      if (controls['firstName'].errors) {
+        if (controls['firstName'].errors['required']) errorMessage += '- First name is required\n';
+        if (controls['firstName'].errors['pattern']) errorMessage += '- First name should only contain letters\n';
+        if (controls['firstName'].errors['minlength']) errorMessage += '- First name should be at least 2 characters\n';
+      }
+      if (controls['lastName'].errors) {
+        if (controls['lastName'].errors['required']) errorMessage += '- Last name is required\n';
+        if (controls['lastName'].errors['pattern']) errorMessage += '- Last name should only contain letters\n';
+        if (controls['lastName'].errors['minlength']) errorMessage += '- Last name should be at least 2 characters\n';
+      }
+      if (controls['email'].errors) {
+        if (controls['email'].errors['required']) errorMessage += '- Email is required\n';
+        if (controls['email'].errors['email'] || controls['email'].errors['pattern']) errorMessage += '- Please enter a valid email address\n';
+      }
+      if (controls['phone'].errors) {
+        if (controls['phone'].errors['required']) errorMessage += '- Phone number is required\n';
+        if (controls['phone'].errors['pattern']) errorMessage += '- Phone number must be 10 digits\n';
+      }
+      if (controls['streetLine1'].errors) {
+        if (controls['streetLine1'].errors['required']) errorMessage += '- Street address is required\n';
+        if (controls['streetLine1'].errors['minlength']) errorMessage += '- Street address should be at least 5 characters\n';
+      }
+      if (controls['city'].errors) {
+        if (controls['city'].errors['required']) errorMessage += '- City is required\n';
+        if (controls['city'].errors['pattern']) errorMessage += '- City should only contain letters\n';
+        if (controls['city'].errors['minlength']) errorMessage += '- City should be at least 2 characters\n';
+      }
+      if (controls['state'].errors) {
+        if (controls['state'].errors['required']) errorMessage += '- State is required\n';
+        if (controls['state'].errors['pattern']) errorMessage += '- State should only contain letters\n';
+        if (controls['state'].errors['minlength']) errorMessage += '- State should be at least 2 characters\n';
+      }
+      if (controls['postalCode'].errors) {
+        if (controls['postalCode'].errors['required']) errorMessage += '- Postal code is required\n';
+        if (controls['postalCode'].errors['pattern']) errorMessage += '- Postal code must be 6 digits\n';
+      }
+
+      this.toastr.warning(errorMessage, 'Validation Error');
       return;
     }
 
@@ -259,7 +299,7 @@ export class CheckoutComponent implements OnInit {
       this.updateQuantity(item, newQuantity);
     }
   }
-  
+
 
   removeItem(cycleId: number): void {
     this.cartService.removeItem(cycleId);
