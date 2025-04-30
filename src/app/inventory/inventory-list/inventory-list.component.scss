@@ -87,7 +87,7 @@
 }
 
 .add-new-btn {
-  background-color: #0f1612;
+  background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -220,7 +220,7 @@
   }
   
   .btn-add-to-cart {
-    background-color: #161411;
+    background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);
     color: white;
     
     &:hover:not(:disabled) {
@@ -241,7 +241,7 @@
       color: black;
       
       &:hover {
-        background-color: #2980b9;
+        background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgb(130, 185, 195) 100%);
       }
     }
     
@@ -250,7 +250,7 @@
       color: rgb(28, 23, 23);
       
       &:hover {
-        background-color: #c0392b;
+        background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgb(235, 133, 141) 100%);
       }
     }
   }

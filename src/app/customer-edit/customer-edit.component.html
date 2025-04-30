@@ -7,22 +7,38 @@
       <div class="row">
         <div class="col-md-6 mb-4">
           <label class="form-label">First Name</label>
-          <input type="text" class="form-control" formControlName="firstName" placeholder="Enter first name">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('firstName')?.invalid && customerForm.get('firstName')?.touched}" formControlName="firstName" placeholder="Enter first name">
+          <div class="invalid-feedback" *ngIf="customerForm.get('firstName')?.invalid && customerForm.get('firstName')?.touched">
+            <span *ngIf="customerForm.get('firstName')?.errors?.['required']">First name is required</span>
+            <span *ngIf="customerForm.get('firstName')?.errors?.['pattern']">First name should contain only letters</span>
+          </div>
         </div>
         <div class="col-md-6 mb-4">
           <label class="form-label">Last Name</label>
-          <input type="text" class="form-control" formControlName="lastName" placeholder="Enter last name">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('lastName')?.invalid && customerForm.get('lastName')?.touched}" formControlName="lastName" placeholder="Enter last name">
+          <div class="invalid-feedback" *ngIf="customerForm.get('lastName')?.invalid && customerForm.get('lastName')?.touched">
+            <span *ngIf="customerForm.get('lastName')?.errors?.['required']">Last name is required</span>
+            <span *ngIf="customerForm.get('lastName')?.errors?.['pattern']">Last name should contain only letters</span>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-4">
           <label class="form-label">Email</label>
-          <input type="email" class="form-control" formControlName="email" placeholder="Enter email address">
+          <input type="email" class="form-control" [ngClass]="{'is-invalid': customerForm.get('email')?.invalid && customerForm.get('email')?.touched}" formControlName="email" placeholder="Enter email address">
+          <div class="invalid-feedback" *ngIf="customerForm.get('email')?.invalid && customerForm.get('email')?.touched">
+            <span *ngIf="customerForm.get('email')?.errors?.['required']">Email is required</span>
+            <span *ngIf="customerForm.get('email')?.errors?.['email'] || customerForm.get('email')?.errors?.['pattern']">Please enter a valid email address</span>
+          </div>
         </div>
         <div class="col-md-6 mb-4">
           <label class="form-label">Phone</label>
-          <input type="tel" class="form-control" formControlName="phone" placeholder="Enter phone number">
+          <input type="tel" class="form-control" [ngClass]="{'is-invalid': customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched}" formControlName="phone" placeholder="Enter phone number">
+          <div class="invalid-feedback" *ngIf="customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched">
+            <span *ngIf="customerForm.get('phone')?.errors?.['required']">Phone number is required</span>
+            <span *ngIf="customerForm.get('phone')?.errors?.['pattern']">Please enter a valid 10-digit phone number</span>
+          </div>
         </div>
       </div>
     </div>
@@ -32,7 +48,11 @@
     <div formGroupName="shippingAddress" class="address-section">
       <div class="mb-4">
         <label class="form-label">Street Address</label>
-        <input type="text" class="form-control" formControlName="streetLine1" placeholder="Street address line 1">
+        <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('shippingAddress.streetLine1')?.invalid && customerForm.get('shippingAddress.streetLine1')?.touched}" formControlName="streetLine1" placeholder="Street address line 1">
+        <div class="invalid-feedback" *ngIf="customerForm.get('shippingAddress.streetLine1')?.invalid && customerForm.get('shippingAddress.streetLine1')?.touched">
+          <span *ngIf="customerForm.get('shippingAddress.streetLine1')?.errors?.['required']">Street address is required</span>
+          <span *ngIf="customerForm.get('shippingAddress.streetLine1')?.errors?.['minlength']">Street address must be at least 5 characters</span>
+        </div>
       </div>
 
       <div class="mb-4">
@@ -42,22 +62,38 @@
       <div class="row">
         <div class="col-md-6 mb-4">
           <label class="form-label">City</label>
-          <input type="text" class="form-control" formControlName="city" placeholder="Enter city">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('shippingAddress.city')?.invalid && customerForm.get('shippingAddress.city')?.touched}" formControlName="city" placeholder="Enter city">
+          <div class="invalid-feedback" *ngIf="customerForm.get('shippingAddress.city')?.invalid && customerForm.get('shippingAddress.city')?.touched">
+            <span *ngIf="customerForm.get('shippingAddress.city')?.errors?.['required']">City is required</span>
+            <span *ngIf="customerForm.get('shippingAddress.city')?.errors?.['pattern']">City should contain only letters</span>
+          </div>
         </div>
         <div class="col-md-6 mb-4">
           <label class="form-label">State/Province</label>
-          <input type="text" class="form-control" formControlName="state" placeholder="Enter state or province">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('shippingAddress.state')?.invalid && customerForm.get('shippingAddress.state')?.touched}" formControlName="state" placeholder="Enter state or province">
+          <div class="invalid-feedback" *ngIf="customerForm.get('shippingAddress.state')?.invalid && customerForm.get('shippingAddress.state')?.touched">
+            <span *ngIf="customerForm.get('shippingAddress.state')?.errors?.['required']">State is required</span>
+            <span *ngIf="customerForm.get('shippingAddress.state')?.errors?.['pattern']">State should contain only letters</span>
+          </div>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-6 mb-4">
           <label class="form-label">Postal/Zip Code</label>
-          <input type="text" class="form-control" formControlName="postalCode" placeholder="Enter postal code">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('shippingAddress.postalCode')?.invalid && customerForm.get('shippingAddress.postalCode')?.touched}" formControlName="postalCode" placeholder="Enter postal code">
+          <div class="invalid-feedback" *ngIf="customerForm.get('shippingAddress.postalCode')?.invalid && customerForm.get('shippingAddress.postalCode')?.touched">
+            <span *ngIf="customerForm.get('shippingAddress.postalCode')?.errors?.['required']">Postal code is required</span>
+            <span *ngIf="customerForm.get('shippingAddress.postalCode')?.errors?.['pattern']">Please enter a valid 6-digit postal code</span>
+          </div>
         </div>
         <div class="col-md-6 mb-4">
           <label class="form-label">Country</label>
-          <input type="text" class="form-control" formControlName="country" placeholder="Enter country">
+          <input type="text" class="form-control" [ngClass]="{'is-invalid': customerForm.get('shippingAddress.country')?.invalid && customerForm.get('shippingAddress.country')?.touched}" formControlName="country" placeholder="Enter country">
+          <div class="invalid-feedback" *ngIf="customerForm.get('shippingAddress.country')?.invalid && customerForm.get('shippingAddress.country')?.touched">
+            <span *ngIf="customerForm.get('shippingAddress.country')?.errors?.['required']">Country is required</span>
+            <span *ngIf="customerForm.get('shippingAddress.country')?.errors?.['pattern']">Country should contain only letters</span>
+          </div>
         </div>
       </div>
     </div>

@@ -17,7 +17,7 @@ export class CustomerEditComponent implements OnInit {
   customerId?: number;
   isLoading = false;
   customer?: Customer;
-  userRole: string| null = null;
+  userRole: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -28,74 +28,74 @@ export class CustomerEditComponent implements OnInit {
     private authService: AuthService,
   ) {
     this.customerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required],
+      firstName: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*'), Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
       shippingAddress: this.fb.group({
-        streetLine1: ['', Validators.required],
+        streetLine1: ['', [Validators.required, Validators.minLength(5)]],
         streetLine2: [''],
-        city: ['', Validators.required],
-        state: ['', Validators.required],
-        postalCode: ['', Validators.required],
-        country: ['', Validators.required]
+        city: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+        state: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+        postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
+        country: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]]
       })
-    });
-  }
+    }
+    );}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      const idParam = params.get('id');
-      this.customerId = idParam ? +idParam : undefined;
-      this.userRole = this.authService.getUserRole();
-      this.isEditMode = !!this.customerId;
+      this.route.paramMap.subscribe(params => {
+        const idParam = params.get('id');
+        this.customerId = idParam ? +idParam : undefined;
+        this.userRole = this.authService.getUserRole();
+        this.isEditMode = !!this.customerId;
 
-      if (this.isEditMode) {
-        this.loadCustomer();
-      } else {
-        this.customerForm.reset();
-      }
-    });
-  }
+        if (this.isEditMode) {
+          this.loadCustomer();
+        } else {
+          this.customerForm.reset();
+        }
+      });
+    }
 
   loadCustomer(): void {
-    this.isLoading = true;
-    this.customerService.getCustomerById(this.customerId!).subscribe({
-      next: (customer) => {
-        this.customer = customer;
-        
-        // Patch basic customer info
-        this.customerForm.patchValue({
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          email: customer.email,
-          phone: customer.phone
-        });
+      this.isLoading = true;
+      this.customerService.getCustomerById(this.customerId!).subscribe({
+        next: (customer) => {
+          this.customer = customer;
 
-        // Patch shipping address if it exists
-        if (customer.shippingAddress) {
-          const shippingAddressGroup = this.customerForm.get('shippingAddress') as FormGroup;
-          shippingAddressGroup.patchValue({
-            streetLine1: customer.shippingAddress.streetLine1 || '',
-            streetLine2: customer.shippingAddress.streetLine2 || '',
-            city: customer.shippingAddress.city || '',
-            state: customer.shippingAddress.state || '',
-            postalCode: customer.shippingAddress.postalCode || '',
-            country: customer.shippingAddress.country || ''
+          // Patch basic customer info
+          this.customerForm.patchValue({
+            firstName: customer.firstName,
+            lastName: customer.lastName,
+            email: customer.email,
+            phone: customer.phone
           });
+
+          // Patch shipping address if it exists
+          if (customer.shippingAddress) {
+            const shippingAddressGroup = this.customerForm.get('shippingAddress') as FormGroup;
+            shippingAddressGroup.patchValue({
+              streetLine1: customer.shippingAddress.streetLine1 || '',
+              streetLine2: customer.shippingAddress.streetLine2 || '',
+              city: customer.shippingAddress.city || '',
+              state: customer.shippingAddress.state || '',
+              postalCode: customer.shippingAddress.postalCode || '',
+              country: customer.shippingAddress.country || ''
+            });
+          }
+
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.isLoading = false;
+          console.error('Error loading customer:', err);
+          this.toastr.error('Failed to load customer details', 'Error');
         }
-        
-        this.isLoading = false;
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Error loading customer:', err);
-        this.toastr.error('Failed to load customer details', 'Error');
-      }
-    });
-  }
+      });
+    }
   navigateToCustomerList(): void {
-    if (this.userRole === 'Admin') {
+      if(this.userRole === 'Admin') {
       this.router.navigate(['/admin/customers']);
     } else if (this.userRole === 'Employee') {
       this.router.navigate(['/employee/customers']);
@@ -107,10 +107,10 @@ export class CustomerEditComponent implements OnInit {
       this.toastr.warning('Please fill all required fields', 'Validation Error');
       return;
     }
-  
+
     this.isLoading = true;
     const formValue = this.customerForm.value;
-  
+
     if (this.isEditMode) {
       const updateData = {
         customerId: this.customerId!,
@@ -118,7 +118,7 @@ export class CustomerEditComponent implements OnInit {
         lastName: formValue.lastName,
         email: formValue.email,
         phone: formValue.phone,
-        Address: {  
+        Address: {
           addressId: this.customer?.shippingAddress?.addressId || 0,
           streetLine1: formValue.shippingAddress.streetLine1,
           streetLine2: formValue.shippingAddress.streetLine2,
@@ -130,17 +130,17 @@ export class CustomerEditComponent implements OnInit {
           isDefaultBilling: false
         }
       };
-  
+
       this.customerService.updateCustomer(this.customerId!, updateData)
         .subscribe({
           next: () => {
             this.toastr.success('Customer updated successfully');
-            if(this.userRole === 'Admin'){
+            if (this.userRole === 'Admin') {
               this.router.navigate(['/admin/customers']);
-              }
-              else if(this.userRole==='Employee'){
-                this.router.navigate(['/employee/customers']);
-              }
+            }
+            else if (this.userRole === 'Employee') {
+              this.router.navigate(['/employee/customers']);
+            }
           },
           error: (err) => {
             this.isLoading = false;
@@ -149,7 +149,7 @@ export class CustomerEditComponent implements OnInit {
             this.toastr.error(errorMessage, 'Error');
           }
         });
-    }  else {
+    } else {
       const createData = {
         firstName: formValue.firstName,
         lastName: formValue.lastName,
@@ -171,10 +171,10 @@ export class CustomerEditComponent implements OnInit {
         .subscribe({
           next: () => {
             this.toastr.success('Customer created successfully');
-            if(this.userRole === 'Admin'){
-            this.router.navigate(['/admin/customers']);
+            if (this.userRole === 'Admin') {
+              this.router.navigate(['/admin/customers']);
             }
-            else if(this.userRole==='Employee'){
+            else if (this.userRole === 'Employee') {
               this.router.navigate(['/employee/customers']);
             }
           },
