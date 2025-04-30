@@ -1,4 +1,3 @@
-// checkout.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from '../services/customer.service';
@@ -9,20 +8,46 @@ import { ToastrService } from 'ngx-toastr';
 import { Customer, CustomerCreateDto, CustomerUpdateDto } from '../models/customer.model';
 import { OrderCreateDto } from '../models/order.model';
 import { AuthService } from '../services/auth.service';
+import { MessageService } from 'primeng/api';
+
+interface CartItem {
+  cycleId: number;
+  brand: string;
+  model: string;
+  price: number;
+  quantity: number;
+  imageUrl?: string;
+}
+
+interface OrderData {
+  shipping: any;
+  payment: any;
+  items: CartItem[];
+  total: number;
+}
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.scss']
+  styleUrls: ['./checkout.component.scss'],
+  providers: [MessageService]
 })
 export class CheckoutComponent implements OnInit {
   checkoutForm: FormGroup;
   customers: Customer[] = [];
-  cartItems: any[] = [];
+  cartItems: CartItem[] = [];
   isLoading = false;
   showCustomerForm = false;
   isNewCustomer = false;
   selectedCustomer: Customer | null = null;
+  shippingForm: FormGroup;
+  paymentForm: FormGroup;
+  selectedPayment: string = 'credit';
+  subtotal: number = 0;
+  shippingCost: number = 5.99;
+  tax: number = 0;
+  total: number = 0;
+  userRole!: string | null;
 
   PaymentMethod = {
     CreditCard: 'CREDIT_CARD',
@@ -37,8 +62,11 @@ export class CheckoutComponent implements OnInit {
     private orderService: OrderService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private messageService: MessageService,
+    private auth: AuthService
   ) {
+    this.userRole = this.auth.getUserRole();
     this.checkoutForm = this.fb.group({
       customerId: ['', Validators.required],
       firstName: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$'), Validators.minLength(2)]],
@@ -55,14 +83,31 @@ export class CheckoutComponent implements OnInit {
       saveShipping: [true],
       saveBilling: [false]
     });
+
+    this.shippingForm = this.fb.group({
+      fullName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      address: ['', [Validators.required, Validators.minLength(5)]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      postalCode: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]]
+    });
+
+    this.paymentForm = this.fb.group({
+      cardNumber: ['', [Validators.required, Validators.pattern(/^\d{16}$/)]],
+      cardName: ['', [Validators.required, Validators.minLength(2)]],
+      expiryDate: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
+      cvv: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]]
+    });
   }
 
   ngOnInit(): void {
     this.loadCustomers();
-    this.loadCart();
+    this.loadCartItems();
+    this.calculateTotals();
   }
 
-  loadCart(): void {
+  loadCartItems(): void {
     this.cartItems = this.cartService.getItems().map(item => ({
       ...item,
       brand: item.brand || 'Unknown Brand',
@@ -72,11 +117,6 @@ export class CheckoutComponent implements OnInit {
       cycleId: item.cycleId,
       imageUrl: item.imageUrl || 'assets/default-cycle.jpg'
     }));
-
-    if (this.cartItems.length === 0) {
-      this.toastr.warning('Your cart is empty', 'Cart Empty');
-      this.router.navigate(['/admin/inventory']);
-    }
   }
 
   loadCustomers(): void {
@@ -223,7 +263,6 @@ export class CheckoutComponent implements OnInit {
           this.isLoading = false;
           this.showCustomerForm = false;
           this.proceedToPayment();
-
         },
         error: (err) => {
           const errorMessage = err.message || 'Failed to create customer';
@@ -286,20 +325,20 @@ export class CheckoutComponent implements OnInit {
     return this.getSubtotal() + this.getTax();
   }
 
-  updateQuantity(item: any, quantity: number): void {
+  updateQuantity(item: CartItem, quantity: number): void {
     if (quantity > 0) {
       this.cartService.updateQuantity(item.cycleId, quantity);
       this.toastr.info('Quantity updated', 'Cart Updated');
     }
   }
-  changeQuantity(item: any, delta: number) {
+
+  changeQuantity(item: CartItem, delta: number): void {
     const newQuantity = item.quantity + delta;
     if (newQuantity >= 1) {
       item.quantity = newQuantity;
       this.updateQuantity(item, newQuantity);
     }
   }
-
 
   removeItem(cycleId: number): void {
     this.cartService.removeItem(cycleId);
@@ -310,8 +349,9 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  // In your checkout.component.ts
   proceedToPayment(): void {
+    console.log('Proceeding to payment');
+    
     if (this.checkoutForm.invalid) {
       this.toastr.warning('Please fill all required fields', 'Form Incomplete');
       return;
@@ -320,10 +360,9 @@ export class CheckoutComponent implements OnInit {
     const formValue = this.checkoutForm.value;
 
     if (this.isNewCustomer) {
-      // For new customers, save them first
       this.saveCustomer();
       this.isNewCustomer = false;
-      return; // saveCustomer will call proceedToPayment again after successful creation
+      return;
     }
 
     const orderData = {
@@ -337,18 +376,70 @@ export class CheckoutComponent implements OnInit {
       totalAmount: this.getTotal(),
       employeeId: this.authService.getEmployeeId()
     };
-
-    // Log the order data before navigation
-    console.log('Proceeding to payment with order data:', orderData);
-    console.log('Selected customer:', this.selectedCustomer);
-    console.log('Shipping address:', this.selectedCustomer?.shippingAddress);
-
-    this.router.navigate(['/admin/payment'], {
-      state: { orderData }
-    });
+    if (this.userRole === 'Employee') {
+      this.router.navigate(['/employee/payment'], {
+        state: { orderData }
+      });
+    } else if (this.userRole === 'Admin') {
+      this.router.navigate(['/admin/payment'], {
+        state: { orderData }
+      });
+    }
+    // this.router.navigate(['/admin/payment'], {
+    //   state: { orderData }
+    // });
   }
 
   continueShopping(): void {
-    this.router.navigate(['/admin/inventory']);
+    if (this.userRole === 'Admin') {
+      this.router.navigate(['/admin/inventory']);
+    }
+    else if (this.userRole === 'Employee') {
+      this.router.navigate(['/employee/inventory']);
+    }
+  }
+
+  calculateTotals(): void {
+    this.subtotal = this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    this.tax = this.subtotal * 0.06;
+    this.total = this.subtotal + this.shippingCost + this.tax;
+  }
+
+  selectPayment(method: string): void {
+    this.selectedPayment = method;
+  }
+
+  isFormValid(): boolean {
+    if (this.selectedPayment === 'credit') {
+      return this.shippingForm.valid && this.paymentForm.valid;
+    }
+    return this.shippingForm.valid;
+  }
+
+  placeOrder(): void {
+    if (!this.isFormValid()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Please fill in all required fields correctly'
+      });
+      return;
+    }
+
+    const orderData: OrderData = {
+      shipping: this.shippingForm.value,
+      payment: this.selectedPayment === 'credit' ? this.paymentForm.value : null,
+      items: this.cartItems,
+      total: this.total
+    };
+    if(this.userRole === 'Admin') {
+    this.router.navigate(['/admin/payment'], {
+      state: { orderData }
+    });
+  }else if (this.userRole === 'Employee') {
+    this.router.navigate(['/employee/payment'], {
+      state: { orderData }
+    });
+  }
   }
 }

@@ -39,7 +39,7 @@
       background: linear-gradient(45deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
       z-index: 0;
     }
-
+  
     .order-title {
       position: relative;
       z-index: 1;
@@ -49,10 +49,10 @@
         font-size: 2rem;
         font-weight: 600;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
+    }
+  
       .order-number {
-        font-size: 1rem;
+      font-size: 1rem;
         opacity: 0.8;
         margin-top: 0.5rem;
         display: block;
@@ -144,7 +144,7 @@
         .summary-value {
           font-size: 1.125rem;
           color: #1e293b;
-          font-weight: 600;
+            font-weight: 600;
         }
       }
     }
@@ -186,11 +186,11 @@
           padding: 1rem 1.5rem;
           border-bottom: 1px solid rgba(226, 232, 240, 0.3);
           transition: all 0.3s ease;
-
+  
           &:hover {
             background: #f8fafc;
           }
-
+  
           &:last-child {
             border-bottom: none;
           }
@@ -211,10 +211,10 @@
                 .product-id {
                   font-size: 0.75rem;
                   color: #64748b;
-                }
-              }
-            }
-
+        }
+      }
+    }
+  
             &.quantity, &.price, &.total {
               font-weight: 500;
             }
@@ -388,6 +388,6 @@
         justify-content: center;
       }
     }
+    }
   }
-}
   

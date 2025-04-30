@@ -1,47 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styleUrls: ['./forgot-password.component.scss']
+  styleUrls: ['./forgot-password.component.scss'],
+  providers: [MessageService]
 })
-export class ForgotPasswordComponent {
-  forgotForm: FormGroup;
-  loading = false;
-  success = false;
-  error: string | null = null;
+export class ForgotPasswordComponent implements OnInit {
+  forgotPasswordForm: FormGroup;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
-    this.forgotForm = this.fb.group({
+    this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
   }
 
-  onSubmit() {
-    if (this.forgotForm.invalid) {
-      return;
-    }
+  ngOnInit(): void { }
 
-    this.loading = true;
-    this.error = null;
+  onSubmit(): void {
+    if (this.forgotPasswordForm.valid) {
+      this.isLoading = true;
+      const { email } = this.forgotPasswordForm.value;
 
-    this.authService.forgotPassword(this.forgotForm.value.email)
-      .subscribe({
-        next: () => {
-          this.success = true;
-          this.loading = false;
+      this.authService.forgotPassword(email).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Password reset link has been sent to your email'
+          });
+          // Optionally navigate back to login after a delay
+          setTimeout(() => {
+            this.navigateToLogin();
+          }, 3000);
         },
-        error: (err) => {
-          this.error = 'An error occurred. Please try again.';
-          this.loading = false;
+        error: (error) => {
+          this.isLoading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message || 'Failed to send reset link. Please try again.'
+          });
         }
       });
+    }
+  }
+
+  navigateToLogin(): void {
+    this.router.navigate(['/login']);
   }
 }

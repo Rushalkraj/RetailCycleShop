@@ -6,6 +6,7 @@ import { OrderCreateDto } from '../models/order.model';
 import { PaymentMethod } from '../models/payment.model';
 import { PaymentService } from '../services/payment.service';
 import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-payment',
@@ -23,12 +24,13 @@ export class PaymentComponent {
     expiry: '',
     cvc: ''
   };
+  userRole: string | null = null;
 
   paymentMethods = [
     { value: PaymentMethod.CreditCard, label: 'Credit Card', icon: 'credit_card' },
     { value: PaymentMethod.UPI, label: 'UPI', icon: 'qr_code' },
     { value: PaymentMethod.BankTransfer, label: 'Bank Transfer', icon: 'account_balance' },
-    { value: PaymentMethod.cashfree, label: 'Cashfree', icon: 'currency_rupee' }
+    { value: PaymentMethod.CashOnDelivery, label: 'CashOnDelivery', icon: 'currency_rupee' }
   ];
 
   toggleQRCode(): void {
@@ -40,8 +42,10 @@ export class PaymentComponent {
     private orderService: OrderService,
     private toastr: ToastrService,
     private paymentService: PaymentService,
-    private cartService: CartService
+    private cartService: CartService,
+    private authService: AuthService,
   ) {
+    this.userRole = this.authService.getUserRole();
     const navigation = this.router.getCurrentNavigation();
     this.orderData = navigation?.extras?.state?.['orderData'];
 
@@ -61,12 +65,14 @@ export class PaymentComponent {
   }
 
   async processPayment(): Promise<void> {
+    console.log('Selected payment method:', this.selectedMethod);
+    
     if (!this.orderData || !this.isPaymentFormValid()) return;
 
-    if (this.selectedMethod === PaymentMethod.cashfree) {
-      await this.processCashfreePayment();
-      return;
-    }
+    // if (this.selectedMethod === PaymentMethod.CashOnDelivery) {
+    //   await this.processCashfreePayment();
+    //   return;
+    // }
 
     this.paymentProcessing = true;
 
@@ -116,7 +122,9 @@ export class PaymentComponent {
         // Clear the cart after successful order
         this.cartService.clearCart();
         this.cartService.saveCart(); // Save the empty cart to localStorage
-
+        console.log('admin', this.userRole);
+        
+        if(this.userRole === 'Admin') {
         this.router.navigate(['/admin/order-confirmation'], {
           state: {
             order: createdOrder,
@@ -125,6 +133,15 @@ export class PaymentComponent {
             shippingAddress: this.orderData.shippingAddress
           }
         });
+      }else if (this.userRole === 'Employee') {
+        this.router.navigate(['/employee/order-confirmation'], {
+          state: {
+            order: createdOrder,
+            customer: this.orderData.customer,
+            items: this.orderData.cartItems,
+            shippingAddress: this.orderData.shippingAddress
+          }
+        });}
       },
       error: (err) => {
         this.paymentProcessing = false;
@@ -186,6 +203,14 @@ export class PaymentComponent {
   }
 
   cancelPayment(): void {
-    this.router.navigate(['/checkout']);
+    console.log('admin', this.userRole);
+    
+    if (this.userRole == 'Admin') {
+      this.router.navigate(['admin/orders']);
+    }
+    else if (this.userRole == 'Employee') {
+      this.router.navigate(['employee/orders']);
+    }
+
   }
 }

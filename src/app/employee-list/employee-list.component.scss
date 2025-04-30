@@ -38,15 +38,15 @@
       padding-bottom: 1rem;
       
 
-      &::after {
-        content: '';
-        position: absolute;
+    &::after {
+      content: '';
+      position: absolute;
         bottom: 0;
-        left: 0;
-        width: 60px;
-        height: 4px;
+      left: 0;
+      width: 60px;
+      height: 4px;
         background: linear-gradient(90deg, #a8c0ff, #3f2b96);
-        border-radius: 2px;
+      border-radius: 2px;
       }
     }
   }

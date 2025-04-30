@@ -30,11 +30,11 @@
           font-weight: 600;
 
           &:hover {
-            background-color: wheat;
+            background-color:linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);;
           }
 
           &.active {
-            background-color: #007bff;
+            background-color:linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);;
             border-left: 4px solid #fff;
           }
         }

@@ -134,6 +134,8 @@ export class InventoryListComponent implements OnInit {
   }
 
   addToCart(cycle: Cycle): void {
+    console.log('userRole:', this.userRole);
+    
     if (cycle.stockQuantity <= 0) {
       this.messageService.add({
         severity: 'warn',

@@ -15,7 +15,7 @@ export enum PaymentMethod {
   CreditCard = 1,
   UPI = 2,
   BankTransfer = 3,
-  cashfree = 4
+  CashOnDelivery = 4
 }
 
 export enum PaymentStatus {

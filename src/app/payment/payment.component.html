@@ -1,152 +1,193 @@
-<div class="payment-container container py-4">
-  <div class="payment-header mb-4 text-center">
-    <h2><i class="bi bi-credit-card"></i> Complete Your Payment</h2>
-    <p class="order-number">Order Total: {{ orderData?.totalAmount | currency:'INR' }}</p>
+<div class="payment-container">
+  <div class="checkout-progress">
+    <div class="progress-step completed">
+      <div class="step-number">
+        <i class="pi pi-shopping-cart"></i>
+      </div>
+      <div class="step-label">Cart</div>
+    </div>
+    <div class="progress-step completed">
+      <div class="step-number">
+        <i class="pi pi-user"></i>
+      </div>
+      <div class="step-label">Checkout</div>
+    </div>
+    <div class="progress-step active">
+      <div class="step-number">
+        <i class="pi pi-credit-card"></i>
+      </div>
+      <div class="step-label">Payment</div>
+    </div>
+    <div class="progress-step">
+      <div class="step-number">
+        <i class="pi pi-check"></i>
+      </div>
+      <div class="step-label">Confirmation</div>
+    </div>
   </div>
 
-  <div class="row">
-    <!-- Payment Method Section -->
-    <div class="col-lg-8">
-      <div class="card payment-method-card mb-4">
-        <div class="card-header">
-          <h4>Payment Method</h4>
+  <div class="payment-content">
+    <div class="payment-left">
+      <div class="payment-header">
+        <h1>Payment Details</h1>
+        <p class="subtitle">Complete your purchase securely</p>
+      </div>
+
+      <div class="payment-methods">
+        <div class="payment-method-card" [class.active]="selectedMethod === PaymentMethod.CreditCard" (click)="selectedMethod = PaymentMethod.CreditCard">
+          <div class="method-icon">
+            <i class="pi pi-credit-card"></i>
+          </div>
+          <div class="method-details">
+            <h3>Credit Card</h3>
+            <p>Pay with your credit or debit card</p>
+          </div>
+          <div class="method-check">
+            <i class="pi pi-check" *ngIf="selectedMethod === PaymentMethod.CreditCard"></i>
+          </div>
         </div>
-        <div class="card-body">
-          <div class="d-flex gap-3 mb-3">
-            <div
-              *ngFor="let method of paymentMethods"
-              class="payment-method p-3 border rounded cursor-pointer"
-              [ngClass]="{'border-primary': selectedMethod === method.value}"
-              (click)="selectedMethod = method.value"
-            >
-              <i class="bi" [ngClass]="{
-                'bi-credit-card': method.value === PaymentMethod.CreditCard,
-              
-                'bi-bank': method.value === PaymentMethod.BankTransfer,
-                'bi-currency-rupee': method.value === PaymentMethod.cashfree
-              }"></i>
-              <span class="ms-2">{{ method.label }}</span>
-            </div>
+
+        <div class="payment-method-card" [class.active]="selectedMethod === PaymentMethod.UPI" (click)="selectedMethod = PaymentMethod.UPI">
+          <div class="method-icon">
+            <i class="pi pi-qrcode"></i>
           </div>
-
-          <!-- Credit Card Form -->
-          <div *ngIf="selectedMethod === PaymentMethod.CreditCard" class="mt-3">
-            <div class="form-group mb-3">
-              <label>Card Number</label>
-              <input type="text" class="form-control"
-                     [(ngModel)]="cardDetails.number"
-                     (input)="formatCardNumber($event)"
-                     placeholder="1234 5678 9012 3456"
-                     maxlength="19">
+          <div class="method-details">
+            <h3>UPI</h3>
+            <p>Pay using UPI QR code</p>
+            </div>
+          <div class="method-check">
+            <i class="pi pi-check" *ngIf="selectedMethod === PaymentMethod.UPI"></i>
+          </div>
             </div>
 
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label>Expiry Date</label>
-                <input type="text" class="form-control"
-                       [(ngModel)]="cardDetails.expiry"
-                       (input)="formatExpiry($event)"
-                       placeholder="MM/YY"
-                       maxlength="5">
+        <div class="payment-method-card" [class.active]="selectedMethod === PaymentMethod.BankTransfer" (click)="selectedMethod = PaymentMethod.BankTransfer">
+          <div class="method-icon">
+            <i class="pi pi-building"></i>
+          </div>
+          <div class="method-details">
+            <h3>Bank Transfer</h3>
+            <p>Direct bank transfer</p>
               </div>
-              <div class="col-md-6 mb-3">
-                <label>Security Code</label>
-                <input type="text" class="form-control"
-                       [(ngModel)]="cardDetails.cvc"
-                       placeholder="CVC"
-                       maxlength="4">
+          <div class="method-check">
+            <i class="pi pi-check" *ngIf="selectedMethod === PaymentMethod.BankTransfer"></i>
+          </div>
+        </div>
+
+        <div class="payment-method-card" [class.active]="selectedMethod === PaymentMethod.CashOnDelivery" (click)="selectedMethod = PaymentMethod.CashOnDelivery">
+          <div class="method-icon">
+            <i class="pi pi-money-bill"></i>
+          </div>
+          <div class="method-details">
+            <h3>Cash on Delivery</h3>
+            <p>Pay when you receive the order</p>
+          </div>
+          <div class="method-check">
+            <i class="pi pi-check" *ngIf="selectedMethod === PaymentMethod.CashOnDelivery"></i>
               </div>
             </div>
           </div>
 
-          <!-- UPI Payment Info -->
-          <div *ngIf="selectedMethod === PaymentMethod.UPI" class="mt-3">
-            <div class="alert alert-info">
-              <i class="bi bi-info-circle"></i> Scan the QR code using any UPI app to make the payment.
+      <div class="payment-forms">
+        <div class="card-details" *ngIf="selectedMethod === PaymentMethod.CreditCard">
+          <h2>Card Details</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input type="text" id="cardNumber" [(ngModel)]="cardDetails.number" (input)="formatCardNumber($event)" 
+                     placeholder="1234 5678 9012 3456" maxlength="19">
             </div>
-            <div class="text-center">
-              <button class="btn btn-primary" (click)="toggleQRCode()">
-                <i class="bi bi-qr-code"></i> Show QR Code
-              </button>
+
+            <div class="form-group">
+              <label for="expiryDate">Expiry Date</label>
+              <input type="text" id="expiryDate" [(ngModel)]="cardDetails.expiry" (input)="formatExpiry($event)"
+                     placeholder="MM/YY" maxlength="5">
             </div>
-            <!-- QR Code Modal -->
-            <div class="qr-modal" *ngIf="showQRCode" (click)="toggleQRCode()">
-              <div class="qr-content" (click)="$event.stopPropagation()">
-                <div class="qr-header">
-                  <h5>Scan QR Code</h5>
-                  <button class="close-btn" (click)="toggleQRCode()">
-                    <i class="bi bi-x"></i>
-                  </button>
-                </div>
-                <div class="qr-body">
-                  <img src="assets/image.png" alt="UPI QR Code" class="qr-image">
-                  <p class="mt-3">Amount: {{ orderData?.totalAmount | currency:'INR' }}</p>
+
+            <div class="form-group">
+              <label for="cvv">CVV</label>
+              <input type="text" id="cvv" [(ngModel)]="cardDetails.cvc" maxlength="4" placeholder="123">
                 </div>
               </div>
+        </div>
+
+        <div class="upi-details" *ngIf="selectedMethod === PaymentMethod.UPI">
+          <h2>UPI Payment</h2>
+          <div class="qr-code-container" *ngIf="showQRCode">
+            <img src="assets/image.png" alt="UPI QR Code" class="qr-code">
+            <p>Scan this QR code to complete payment</p>
+          </div>
+          <button pButton type="button" label="Show QR Code" (click)="toggleQRCode()" 
+                  class="p-button-outlined"></button>
+        </div>
+
+        <div class="bank-details" *ngIf="selectedMethod === PaymentMethod.BankTransfer">
+          <h2>Bank Transfer Details</h2>
+          <div class="bank-info">
+            <p><strong>Account Name:</strong> Retail Cycle Shop</p>
+            <p><strong>Account Number:</strong> 1234567890</p>
+            <p><strong>Bank Name:</strong> Example Bank</p>
+            <p><strong>IFSC Code:</strong> EXMP1234567</p>
             </div>
           </div>
 
-          <!-- Bank Transfer Info -->
-          <div *ngIf="selectedMethod === PaymentMethod.BankTransfer" class="mt-3">
-            <div class="alert alert-warning">
-              <strong>Important:</strong> Include your reference number when transferring.
+        <div class="cod-details" *ngIf="selectedMethod === PaymentMethod.CashOnDelivery">
+          <h2>Cash on Delivery</h2>
+          <div class="cod-info">
+            <div class="info-icon">
+              <i class="pi pi-info-circle"></i>
             </div>
-            <table class="table table-bordered mt-2">
-              <tr><th>Bank Name:</th><td>Retail Cycle Shop Bank</td></tr>
-              <tr><th>Account Number:</th><td>1234567890</td></tr>
-              <tr><th>IFSC Code:</th><td>RCSB0000123</td></tr>
-              <tr><th>Reference:</th><td>ORDER-{{ orderData?.orderNumber || 'N/A' }}</td></tr>
-            </table>
+            <div class="info-content">
+              <p>Pay in cash when your order is delivered. Our delivery partner will collect the payment at your doorstep.</p>
+              <ul>
+                <li>No additional charges for COD</li>
+                <li>Pay only when you receive the order</li>
+                <li>Standard delivery time applies</li>
+              </ul>
           </div>
-
-          <!-- Cashfree Info -->
-          <div *ngIf="selectedMethod === PaymentMethod.cashfree" class="alert alert-info mt-3">
-            <i class="bi bi-info-circle"></i> You will be redirected to Cashfree to complete your payment securely.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Order Summary Section -->
-    <div class="col-lg-4">
-      <div class="card order-summary-card">
-        <div class="card-header">
-          <h4>Order Summary</h4>
+    <div class="payment-right">
+      <div class="order-summary">
+        <h2>Order Summary</h2>
+        <div class="summary-content">
+          <div class="summary-item" *ngFor="let item of orderData.cartItems">
+            <img [src]="item.imageUrl || 'assets/default-cycle.jpg'" [alt]="item.brand + ' ' + item.model" class="item-image">
+            <div class="item-details">
+              <h4>{{item.brand}} {{item.model}}</h4>
+              <p>Quantity: {{item.quantity}}</p>
         </div>
-        <div class="card-body">
-          <div class="summary-item mb-2" *ngFor="let item of orderData?.cartItems">
-            <div class="d-flex justify-content-between">
-              <span>{{ item.brand }} {{ item.model }} × {{ item.quantity }}</span>
-              <span>{{ item.price * item.quantity | currency:'INR' }}</span>
+            <div class="item-price">
+              <p>{{item.price * item.quantity | currency:'INR'}}</p>
             </div>
           </div>
 
-          <hr>
-          <div class="d-flex justify-content-between mb-2">
-            <strong>Subtotal:</strong>
-            <span>{{ orderData?.subtotal | currency:'INR' }}</span>
+          <div class="summary-totals">
+            <div class="total-row">
+              <span>Subtotal</span>
+              <span>{{orderData.subtotal | currency:'INR'}}</span>
+            </div>
+            <div class="total-row">
+              <span>Tax</span>
+              <span>{{orderData.tax | currency:'INR'}}</span>
+            </div>
+            <div class="total-row grand-total">
+              <span>Total</span>
+              <span>{{orderData.totalAmount | currency:'INR'}}</span>
           </div>
-          <div class="d-flex justify-content-between mb-2">
-            <strong>Tax:</strong>
-            <span>{{ orderData?.tax | currency:'INR' }}</span>
           </div>
-          <div class="d-flex justify-content-between">
-            <strong>Total:</strong>
-            <span>{{ orderData?.totalAmount | currency:'INR' }}</span>
+
+          <div class="payment-actions">
+            <button pButton type="button" label="Cancel" class="p-button-outlined" (click)="cancelPayment()"></button>
+            <button pButton type="button" label="Process Payment" class="p-button-primary" 
+                    [disabled]="!isPaymentFormValid()" (click)="processPayment()"></button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="mt-4 d-flex justify-content-end gap-3">
-    <button class="btn btn-outline-secondary" (click)="cancelPayment()">Cancel</button>
-    <button class="btn btn-primary" 
-            [disabled]="paymentProcessing || !isPaymentFormValid()"
-            (click)="processPayment()">
-      <span *ngIf="paymentProcessing" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      {{ paymentProcessing ? 'Processing...' : 'Pay Now' }}
-    </button>
   </div>
 </div>
+
+<p-toast></p-toast>

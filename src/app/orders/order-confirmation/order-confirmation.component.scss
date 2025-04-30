@@ -8,6 +8,82 @@
   font-family: 'Segoe UI', sans-serif;
   color: #333;
 
+  .checkout-progress {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #e0e0e0;
+      z-index: 1;
+    }
+
+    .progress-step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      background: #f9f9f9;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .step-label {
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      &.completed {
+        .step-number {
+          background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);
+          color: white;
+        }
+
+        .step-label {
+          color: #2c3e50;
+          font-weight: 500;
+        }
+      }
+
+      &.active {
+        background: linear-gradient(135deg, rgba(168, 192, 255, 0.1) 0%, rgba(63, 43, 150, 0.1) 100%);
+        box-shadow: 0 4px 15px rgba(63, 43, 150, 0.1);
+
+        .step-number {
+          background: linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);
+          color: white;
+          box-shadow: 0 4px 15px rgba(63, 43, 150, 0.3);
+        }
+
+        .step-label {
+          color: #2c3e50;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
   h2, h3 {
     color: #2c3e50;
     margin-bottom: 0.75rem;
@@ -31,7 +107,7 @@
         align-items: center;
         gap: 0.5rem;
         font-size: 1.8rem;
-        color: #28a745;
+        color:  linear-gradient(135deg, rgba(168, 192, 255, 1) 0%, rgba(63, 43, 150, 1) 100%);
 
         i {
           font-size: 1.8rem;
