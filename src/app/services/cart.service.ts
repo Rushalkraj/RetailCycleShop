@@ -63,12 +63,12 @@ export class CartService {
 
   removeItem(cycleId: number) {
     const userRole = this.authService.getUserRole();
-    if (userRole === 'Admin') {
+    // if (userRole === 'Admin') {
       this.cartItems = this.cartItems.filter(item => item.cycleId !== cycleId);
       this.saveCart();
-    } else {
-      alert('You do not have permission to remove items from the cart.');
-    }
+    // } else {
+    //   alert('You do not have permission to remove items from the cart.');
+    // }
   }
 
   clearCart() {

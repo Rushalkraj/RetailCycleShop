@@ -345,7 +345,12 @@ export class CheckoutComponent implements OnInit {
     this.cartItems = this.cartService.getItems();
     this.toastr.info('Item removed from cart', 'Cart Updated');
     if (this.cartItems.length === 0) {
+      if (this.userRole === 'Employee') {
+        this.router.navigate(['/employee/inventory']);
+      }
+      else if (this.userRole === 'Admin') {
       this.router.navigate(['/admin/inventory']);
+      }
     }
   }
 

@@ -5,6 +5,7 @@ import { Order } from '../../models/order.model';
 import { CycleService } from '../../services/cycle.service';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
 
 interface Cycle {
   cycleId: number;
@@ -32,13 +33,17 @@ interface OrderItem {
 export class OrderDetailsComponent implements OnInit {
   order: Order | null = null;
   loading = false;
+  userRole: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService,
-    private cycleService: CycleService
-  ) { }
+    private cycleService: CycleService,
+  private authService: AuthService
+  ) {
+    this.userRole = this.authService.getUserRole();
+   }
 
   ngOnInit(): void {
     this.loading = true;
@@ -93,7 +98,11 @@ export class OrderDetailsComponent implements OnInit {
   }
 
   goBack(): void {
+    if (this.userRole == 'Admin') {
     this.router.navigate(['admin/orders']);
+    }else if (this.userRole == 'Employee') {
+      this.router.navigate(['employee/orders']);
+    }
   }
 
   getStatusClass(status: string): string {

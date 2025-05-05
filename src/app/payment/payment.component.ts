@@ -51,7 +51,11 @@ export class PaymentComponent {
 
     if (!this.orderData) {
       this.toastr.error('No order data found', 'Error');
-      this.router.navigate(['/checkout']);
+      if (this.userRole === 'Admin') {
+        this.router.navigate(['/admin/OrderConfirmationComponent']);
+      } else if (this.userRole === 'Employee') {
+        this.router.navigate(['/employee/OrderConfirmationComponent']);
+      }
     }
   }
 
@@ -66,7 +70,7 @@ export class PaymentComponent {
 
   async processPayment(): Promise<void> {
     console.log('Selected payment method:', this.selectedMethod);
-    
+
     if (!this.orderData || !this.isPaymentFormValid()) return;
 
     // if (this.selectedMethod === PaymentMethod.CashOnDelivery) {
@@ -123,25 +127,26 @@ export class PaymentComponent {
         this.cartService.clearCart();
         this.cartService.saveCart(); // Save the empty cart to localStorage
         console.log('admin', this.userRole);
-        
-        if(this.userRole === 'Admin') {
-        this.router.navigate(['/admin/order-confirmation'], {
-          state: {
-            order: createdOrder,
-            customer: this.orderData.customer,
-            items: this.orderData.cartItems,
-            shippingAddress: this.orderData.shippingAddress
-          }
-        });
-      }else if (this.userRole === 'Employee') {
-        this.router.navigate(['/employee/order-confirmation'], {
-          state: {
-            order: createdOrder,
-            customer: this.orderData.customer,
-            items: this.orderData.cartItems,
-            shippingAddress: this.orderData.shippingAddress
-          }
-        });}
+
+        if (this.userRole === 'Admin') {
+          this.router.navigate(['/admin/order-confirmation'], {
+            state: {
+              order: createdOrder,
+              customer: this.orderData.customer,
+              items: this.orderData.cartItems,
+              shippingAddress: this.orderData.shippingAddress
+            }
+          });
+        } else if (this.userRole === 'Employee') {
+          this.router.navigate(['/employee/order-confirmation'], {
+            state: {
+              order: createdOrder,
+              customer: this.orderData.customer,
+              items: this.orderData.cartItems,
+              shippingAddress: this.orderData.shippingAddress
+            }
+          });
+        }
       },
       error: (err) => {
         this.paymentProcessing = false;
@@ -204,12 +209,12 @@ export class PaymentComponent {
 
   cancelPayment(): void {
     console.log('admin', this.userRole);
-    
+
     if (this.userRole == 'Admin') {
-      this.router.navigate(['admin/orders']);
+      this.router.navigate(['admin/inventory']);
     }
     else if (this.userRole == 'Employee') {
-      this.router.navigate(['employee/orders']);
+      this.router.navigate(['employee/inventory']);
     }
 
   }
